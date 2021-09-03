@@ -23,6 +23,7 @@ using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
 using Traiting2.AutoMapper;
+using Traiting2.Middleware;
 
 namespace Traiting2
 {
@@ -43,9 +44,7 @@ namespace Traiting2
             string connection = Configuration.GetConnectionString("DefaultConnection");
             services.AddDbContext<DAL.EF.AppDBContext>(options => options.UseSqlServer(connection), ServiceLifetime.Transient);
             var appSettingsSection = Configuration.GetSection("AppSettings");
-            var appSettings = appSettingsSection.Get<AppSettings>();
-            services.AddSingleton<AppSettings>(appSettings);
-            services.AddSingleton<SmtpConfig>(Configuration.GetSection("SmtpConfig").Get<SmtpConfig>());
+            var appSettings = appSettingsSection.Get<AppSettings>();            
             #region JWT_Setting
             //--------- JWT settingd ---------------------
 
@@ -73,7 +72,7 @@ namespace Traiting2
                 "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789-._@+";
                 options.User.RequireUniqueEmail = true;
 
-                //options.SignIn.RequireConfirmedEmail = true;
+                options.SignIn.RequireConfirmedEmail = true;
             });
             var key = System.Text.Encoding.ASCII.GetBytes(appSettings.Secret);
             services.AddAuthentication(options =>
@@ -130,8 +129,10 @@ namespace Traiting2
           });
             //--------- JWT settingd ---------------------
             #endregion
-
+            services.AddRouting();
             services.AddAutoMapper(typeof(AutoMapperProfile));
+            services.AddSingleton<AppSettings>(appSettings);
+            services.AddSingleton<SmtpConfig>(Configuration.GetSection("SmtpConfig").Get<SmtpConfig>());
             services.AddScoped<IClientService, ClientService>();
             services.AddScoped<IEmailService, EmailService>();
 
@@ -186,11 +187,11 @@ namespace Traiting2
             }
 
             app.UseHttpsRedirection();
-
+            app.UseMiddleware<ExeptionMeddleware>();
             app.UseRouting();
 
             app.UseAuthorization();
-
+            app.UseAuthentication();
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();

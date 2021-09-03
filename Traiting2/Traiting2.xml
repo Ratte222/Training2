@@ -4,7 +4,7 @@
         <name>Traiting2</name>
     </assembly>
     <members>
-        <member name="M:Traiting2.Controllers.AccountController.Login(BLL.DTO.Account.LoginModelDTO)">
+        <member name="M:Traiting2.Controllers.AccountController.ChangePassword(BLL.DTO.Account.ChangePasswordDTO)">
             <summary>
             Reset password
             </summary>

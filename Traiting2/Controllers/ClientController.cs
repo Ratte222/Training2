@@ -23,17 +23,22 @@ namespace Traiting2.Controllers
             _clientService = clientService;
         }
 
-        
-        [HttpGet("GetClientInfo")]
+
         [Authorize]
+        [HttpGet("GetClientInfo")]        
         public IActionResult GetClientInfo(string clientId = null)
         {
             if (clientId == null)
             {
                 clientId = User.Identity.Name;
             }
-            ClientDTO client = _mapper.Map<Client, ClientDTO>(_clientService.Get(i => i.Id == clientId));
-            return Ok(client);
+            Client client = _clientService.Get(i =>
+                i.Id.ToLower() == clientId.ToLower());
+            if(client == null)
+            {
+                return NotFound();
+            }            
+            return Ok(_mapper.Map<Client, ClientDTO>(client));
         }
     }
 }

@@ -11,8 +11,7 @@ namespace BLL.Interfaces
         IQueryable<Client> GetAll();
         IEnumerable<Client> GetAll_Enumerable();
         IQueryable<Client> GetAll_Queryable();
-        Client Get(Predicate<Client> predicate);
-        Task<Client> GetAsync(Predicate<Client> predicate);
+        Client Get(Func<Client, bool> func);
         void Create(Client item);
         void CreateRange(IEnumerable<Client> items);
         void Update(Client item);

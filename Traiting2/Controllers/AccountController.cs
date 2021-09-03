@@ -84,19 +84,19 @@ namespace Traiting2.Controllers
 
 
 
-        //[HttpPost]
-        //[ProducesResponseType(typeof(string), 200)]
-        //[ProducesResponseType(typeof(IEnumerable<IdentityError>), 400)]
-        //[ProducesResponseType(typeof(string), 500)]
-        //public async Task<IActionResult> ChangePassword(ChangePasswordDTO changePasswordDTO)
-        //{
-        //    Employee employee = await _userManager.FindByNameAsync(changePasswordDTO.UserName);
-        //    var result = await _userManager.ChangePasswordAsync(employee, changePasswordDTO.CurrentPassword, changePasswordDTO.NewPassword);
-        //    if (result.Succeeded)
-        //        return StatusCode(200);
-        //    else
-        //        return BadRequest(result.Errors);
-        //}
+        [HttpPost("ChangePassword")]
+        [ProducesResponseType(typeof(string), 200)]
+        [ProducesResponseType(typeof(IEnumerable<IdentityError>), 400)]
+        [ProducesResponseType(typeof(string), 500)]
+        public async Task<IActionResult> ChangePassword(ChangePasswordDTO changePasswordDTO)
+        {
+            Client client = await _userManager.FindByNameAsync(changePasswordDTO.UserName);
+            var result = await _userManager.ChangePasswordAsync(client, changePasswordDTO.CurrentPassword, changePasswordDTO.NewPassword);
+            if (result.Succeeded)
+                return StatusCode(200);
+            else
+                return BadRequest(result.Errors);
+        }
 
         [HttpPost("Login")]
         [ProducesResponseType(typeof(LoginResponseModel), 200)]

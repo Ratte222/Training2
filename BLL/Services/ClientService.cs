@@ -36,9 +36,11 @@ namespace BLL.Services
             _context.SaveChanges();
         }
 
-        public Client Get(Predicate<Client> predicate)
+        public Client Get(Func<Client,bool> func /*Predicate<Client> predicate*/)
         {
-            return _context.Clients.Find(predicate);
+            //Exception: The key value at position 0 of the call to 'DbSet<Client>.Find' was of type 'Predicate<Client>', which does not match the property type of 'string'
+            //return _context.Clients.Find(predicate);
+            return _context.Clients.FirstOrDefault(func);
         }
 
         public IQueryable<Client> GetAll()
@@ -54,11 +56,6 @@ namespace BLL.Services
         public IQueryable<Client> GetAll_Queryable()
         {
             return _context.Clients.Where(i => i.RemoveData == null).AsNoTracking();
-        }
-
-        public async Task<Client> GetAsync(Predicate<Client> predicate)
-        {
-            return await _context.Clients.FindAsync(predicate);
         }
 
         public void Update(Client item)
