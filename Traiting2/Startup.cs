@@ -168,6 +168,16 @@ namespace Traiting2
                 });
             });
             #endregion
+
+            #region redis cackhing
+            //https://www.youtube.com/watch?v=UrQWii_kfIE
+            //https://docs.microsoft.com/ru-ru/aspnet/core/performance/caching/distributed?view=aspnetcore-3.1#distributed-redis-cache
+            services.AddStackExchangeRedisCache(options =>
+            {
+                options.Configuration = Configuration.GetConnectionString("Redis");
+                options.InstanceName = "Training2_";
+            });
+            #endregion
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
