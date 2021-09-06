@@ -9,19 +9,38 @@ using System.Threading.Tasks;
 
 namespace BLL.Services
 {
-    public class ArticleService: BaseMongoRepo<Article>, IMongoRepoArticle
+    public class ArticleService: IMongoRepoArticle
     {
-        public ArticleService(IMongoClient mongoClient,
-            IClientSessionHandle clientSessionHandle, AppSettings appSettings) 
-            : base(mongoClient, clientSessionHandle, "article", appSettings)
-        {
+        private readonly IMongoCollection<Article> _articles;
 
+        public ArticleService(MongoDBSettings settings)
+        {
+            var client = new MongoClient(settings.ConnectionString);
+            var database = client.GetDatabase(settings.DatabaseName);
+
+            _articles = database.GetCollection<Article>(settings.ArticleDatabaseName);
         }
 
-        public async Task<Article> GetArticleById(string articleId)
+        public List<Article> Get() =>
+            _articles.Find(article => true).ToList();
+
+        public Article Get(string id) =>
+            _articles.Find<Article>(article => article.Id == id).FirstOrDefault();
+
+        public Article Create(Article article)
         {
-            var filter = Builders<Article>.Filter.Eq(s => s.Id, articleId);
-            return await Collection.Find(filter).FirstOrDefaultAsync();
+            _articles.InsertOne(article);
+            return article;
         }
+
+        public void Update(Article articleIn) =>
+            _articles.ReplaceOne(article => article.Id == articleIn.Id, articleIn);
+
+        public void Remove(Article articleIn) =>
+            _articles.DeleteOne(article => article.Id == articleIn.Id);
+
+        public void Remove(string id) =>
+            _articles.DeleteOne(article => article.Id == id);
     }
 }
+

@@ -45,7 +45,9 @@ namespace Traiting2
             string connection = Configuration.GetConnectionString("DefaultConnection");
             services.AddDbContext<DAL.EF.AppDBContext>(options => options.UseSqlServer(connection), ServiceLifetime.Transient);
             var appSettingsSection = Configuration.GetSection("AppSettings");
-            var appSettings = appSettingsSection.Get<AppSettings>();            
+            var appSettings = appSettingsSection.Get<AppSettings>();
+            var mongoSettingsSection = Configuration.GetSection("MongoDBSettings");
+            var mongoSettings = mongoSettingsSection.Get<MongoDBSettings>();
             #region JWT_Setting
             //--------- JWT settingd ---------------------
 
@@ -132,16 +134,19 @@ namespace Traiting2
             #endregion
             //services.AddRouting();
             services.AddAutoMapper(typeof(AutoMapperProfile));
-
+            #region mongodb
+            //https://docs.microsoft.com/ru-ru/aspnet/core/tutorials/first-mongo-app?view=aspnetcore-3.1&tabs=visual-studio
             //https://alexalvess.medium.com/getting-started-with-net-core-api-mongodb-and-transactions-c7a021684d01
+            //https://metanit.com/nosql/mongodb/1.2.php
             services.AddSingleton<IMongoClient>(options =>
             {
-                return new MongoClient(Configuration.GetConnectionString("MongoDB"));
+                return new MongoClient(mongoSettings.ConnectionString);
             });
-            services.AddScoped(c =>
-                c.GetService<IMongoClient>().StartSession());
-
+            //services.AddScoped(c =>
+            //    c.GetService<IMongoClient>().StartSession());
+            #endregion
             services.AddSingleton<AppSettings>(appSettings);
+            services.AddSingleton<MongoDBSettings>(mongoSettings);
             services.AddSingleton<SmtpConfig>(Configuration.GetSection("SmtpConfig").Get<SmtpConfig>());
             services.AddScoped<IClientService, ClientService>();
             services.AddScoped<IEmailService, EmailService>();
