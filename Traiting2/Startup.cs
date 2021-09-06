@@ -16,6 +16,7 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
+using MongoDB.Driver;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -129,12 +130,22 @@ namespace Traiting2
           });
             //--------- JWT settingd ---------------------
             #endregion
-            services.AddRouting();
+            //services.AddRouting();
             services.AddAutoMapper(typeof(AutoMapperProfile));
+
+            //https://alexalvess.medium.com/getting-started-with-net-core-api-mongodb-and-transactions-c7a021684d01
+            services.AddSingleton<IMongoClient>(options =>
+            {
+                return new MongoClient(Configuration.GetConnectionString("MongoDB"));
+            });
+            services.AddScoped(c =>
+                c.GetService<IMongoClient>().StartSession());
+
             services.AddSingleton<AppSettings>(appSettings);
             services.AddSingleton<SmtpConfig>(Configuration.GetSection("SmtpConfig").Get<SmtpConfig>());
             services.AddScoped<IClientService, ClientService>();
             services.AddScoped<IEmailService, EmailService>();
+            services.AddScoped<IMongoRepoArticle, ArticleService>();
 
             #region Swagger
             services.AddSwaggerGen(c =>
