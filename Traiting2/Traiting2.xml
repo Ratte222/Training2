@@ -4,7 +4,7 @@
         <name>Traiting2</name>
     </assembly>
     <members>
-        <member name="M:Traiting2.Controllers.AccountController.ChangePassword(BLL.DTO.Account.ChangePasswordDTO)">
+        <member name="M:Traiting2.Controllers.AccountController.GoogleLogin(System.String)">
             <summary>
             Reset password
             </summary>

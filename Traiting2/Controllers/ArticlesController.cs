@@ -4,6 +4,7 @@ using BLL.DTO.Article;
 using BLL.Helpers;
 using BLL.Interfaces;
 using DAL.MongoEntity;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System;
@@ -31,6 +32,7 @@ namespace Traiting2.Controllers
 
         }
 
+        [Authorize]
         [HttpGet("GetArticles")]
         public IActionResult GetArticles(int? pageLength = null,
             int? pageNumber = null)

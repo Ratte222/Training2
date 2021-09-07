@@ -32,7 +32,11 @@ namespace Traiting2
     {
         public Startup(IConfiguration configuration)
         {
-            Configuration = configuration;
+            var builder = new ConfigurationBuilder()
+               .AddJsonFile("google_secret.json").AddConfiguration(configuration);
+            // создаем конфигурацию
+            Configuration = builder.Build();
+            //Configuration = configuration;
         }
 
         public IConfiguration Configuration { get; }
@@ -48,12 +52,14 @@ namespace Traiting2
             var appSettings = appSettingsSection.Get<AppSettings>();
             var mongoSettingsSection = Configuration.GetSection("MongoDBSettings");
             var mongoSettings = mongoSettingsSection.Get<MongoDBSettings>();
+            var googleSettingsSection = Configuration.GetSection("Web");
+            var googleSettings = googleSettingsSection.Get<GoogleSecret>();
             #region JWT_Setting
             //--------- JWT settingd ---------------------
 
             services.AddIdentity<Client, IdentityRole>()
                .AddEntityFrameworkStores<DAL.EF.AppDBContext>()
-               .AddDefaultTokenProviders(); ;
+               .AddDefaultTokenProviders();
 
             services.Configure<IdentityOptions>(options =>
             {
@@ -147,6 +153,7 @@ namespace Traiting2
             #endregion
             services.AddSingleton<AppSettings>(appSettings);
             services.AddSingleton<MongoDBSettings>(mongoSettings);
+            services.AddSingleton<GoogleSecret>(googleSettings);
             services.AddSingleton<SmtpConfig>(Configuration.GetSection("SmtpConfig").Get<SmtpConfig>());
             services.AddScoped<IClientService, ClientService>();
             services.AddScoped<IEmailService, EmailService>();
@@ -216,8 +223,8 @@ namespace Traiting2
             app.UseMiddleware<ExeptionMeddleware>();
             app.UseRouting();
 
-            app.UseAuthorization();
             app.UseAuthentication();
+            app.UseAuthorization();
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();

@@ -27,9 +27,10 @@ namespace Traiting2.Controllers
         private readonly IEmailService _emailService;
         readonly RoleManager<IdentityRole> _roleManager;
         private readonly ILogger<AccountController> _logger;
+        private readonly GoogleSecret _googleSecret;
         public AccountController(UserManager<Client> userManager, SignInManager<Client> signInManager,
             RoleManager<IdentityRole> roleManager, AppSettings appSettings, IEmailService emailService,
-            ILogger<AccountController> logger)
+            ILogger<AccountController> logger, GoogleSecret googleSecret)
         {
             _userManager = userManager;
             _signInManager = signInManager;
@@ -37,6 +38,7 @@ namespace Traiting2.Controllers
             _appSettings = appSettings;
             _emailService = emailService;
             _logger = logger;
+            _googleSecret = googleSecret;
         }
 
         //[HttpGet]
@@ -82,7 +84,21 @@ namespace Traiting2.Controllers
         //    return BadRequest("Invalid token");
         //}
 
+        [HttpPost("GoogleLogin")]
+        public IActionResult GoogleLogin(string code)
+        {
+            //this.ControllerContext.HttpContext.Request.;
+            return Ok();
+        }
 
+        [HttpGet("RedirectToGoogleLogin")]
+        public IActionResult RedirectToGoogleLogin()
+        {
+
+            return RedirectToRoute($"https://accounts.google.com/o/oauth2/v2/auth?client_id={_googleSecret.client_id}" +
+                $"&redirect_uri={_googleSecret.redirect_uris.First()}" +
+                $"&response_type=code&scope=https://www.googleapis.com/auth/drive.metadata.readonly&include_granted_scopes=true&access_type=offline");
+        }
 
         [HttpPost("ChangePassword")]
         [ProducesResponseType(typeof(string), 200)]
