@@ -1,6 +1,7 @@
 ﻿using BLL.Interfaces;
 using DAL.Model;
 using Microsoft.Extensions.Caching.Distributed;
+using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,16 +13,24 @@ namespace Traiting2.BackgroundService
 {
     public class UpdateRedisService: AuxiliaryLib.BaseBackgroundService.BackgroundService
     {
-        private readonly IAnnouncementService _announcementService;
-        private readonly IDistributedCache _cache;
-        public UpdateRedisService(IAnnouncementService announcementService, IDistributedCache cache)
+        private IAnnouncementService _announcementService;
+        private IDistributedCache _cache;
+        private readonly IServiceProvider _services;
+        public UpdateRedisService(/*IAnnouncementService announcementService, IDistributedCache cache*/
+            IServiceProvider Services)
         {
-            (_announcementService, _cache) =(announcementService, cache);
+            //(_announcementService, _cache) =(announcementService, cache);
+            _services = Services;
         }
 
         protected override async Task ExecuteAsync(CancellationToken stoppingToken)
         {
-            await Task.Delay(TimeSpan.FromMinutes(1), stoppingToken);
+            await Task.Delay(TimeSpan.FromSeconds(10), stoppingToken);
+            var scope = _services.CreateScope();
+            _announcementService = scope.ServiceProvider.GetRequiredService<IAnnouncementService>();
+            _cache = scope.ServiceProvider.GetRequiredService<IDistributedCache>();
+            //_announcementService = _services.GetService<IAnnouncementService>();
+            //_cache = _services.GetService<IDistributedCache>();
             while (!stoppingToken.IsCancellationRequested)
             {
                 //string recordKey = $"PopularAnnouncementData_{DateTime.Now.ToString("yyyyMMdd_hhmm")}";
