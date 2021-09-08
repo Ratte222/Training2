@@ -10,6 +10,16 @@ namespace BLL.Helpers
         public string Audience { get; set; }  // audience token
         public int Lifetime { get; set; }     // life time token
         public string Secret { get; set; }    // key for crypt
-        
+        public string PathTemp { get; set; }
+
+        public string PathSaveProductPhoto
+        {
+            get
+            {
+                return System.IO.Path.Combine(System.IO.Directory.GetCurrentDirectory(),
+                    PathTemp);
+            }
+        }
+        public int PathSliceDepth { get; set; }
     }
 }

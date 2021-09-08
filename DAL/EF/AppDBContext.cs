@@ -11,6 +11,8 @@ namespace DAL.EF
     public class AppDBContext : IdentityDbContext
     {
         public DbSet<Client> Clients { get; set; }
+        public DbSet<Announcement> Announcements { get; set; }
+        public DbSet<ProductPhoto> ProductPhotos { get; set; }
         public AppDBContext(DbContextOptions<AppDBContext> options)
             : base(options)
         {
@@ -35,6 +37,15 @@ namespace DAL.EF
                     .HasDefaultValueSql(null);
                 }
             );
+            modelBuilder.Entity<Announcement>().HasKey(i => i.Id);
+            modelBuilder.Entity<ProductPhoto>(
+                m =>
+                {
+                    m.HasKey(i => i.Id);
+                    m.HasOne(i => i.Announcement)
+                    .WithMany(j => j.ProductPhotos)
+                    .HasForeignKey(i => i.AnnouncementId);
+                });
         }
     }
 }

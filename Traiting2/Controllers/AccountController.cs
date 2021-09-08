@@ -94,10 +94,11 @@ namespace Traiting2.Controllers
         [HttpGet("RedirectToGoogleLogin")]
         public IActionResult RedirectToGoogleLogin()
         {
-
-            return RedirectToRoute($"https://accounts.google.com/o/oauth2/v2/auth?client_id={_googleSecret.client_id}" +
+            string url = $"https://accounts.google.com/o/oauth2/v2/auth?client_id={_googleSecret.client_id}" +
                 $"&redirect_uri={_googleSecret.redirect_uris.First()}" +
-                $"&response_type=code&scope=https://www.googleapis.com/auth/drive.metadata.readonly&include_granted_scopes=true&access_type=offline");
+                $"&response_type=code&scope=https://www.googleapis.com/auth/drive.metadata.readonly&include_granted_scopes=true&access_type=offline" +
+                $"&include_granted_scopes=true";
+            return RedirectToRoute(url);
         }
 
         [HttpPost("ChangePassword")]

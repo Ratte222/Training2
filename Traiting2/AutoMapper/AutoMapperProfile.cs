@@ -1,6 +1,8 @@
 ﻿using AutoMapper;
+using BLL.DTO.Announcement;
 using BLL.DTO.Article;
 using BLL.DTO.Client;
+using BLL.DTO.ProductPhoto;
 using DAL.Model;
 using DAL.MongoEntity;
 using System;
@@ -19,6 +21,9 @@ namespace Traiting2.AutoMapper
             CreateMap<Article, ArticleDTO>();
             CreateMap<ArticleDTO, Article>();
             CreateMap<NewArticle, Article>();
+            CreateMap<NewAnnouncementDTO, Announcement>();
+            CreateMap<Announcement, AnnouncementDTO>();
+            CreateMap<ProductPhoto, ProductPhotoDTO>();
         }
     }
 }

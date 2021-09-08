@@ -10,6 +10,7 @@ using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Caching.Distributed;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -24,6 +25,7 @@ using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
 using Traiting2.AutoMapper;
+using Traiting2.BackgroundService;
 using Traiting2.Middleware;
 
 namespace Traiting2
@@ -52,7 +54,7 @@ namespace Traiting2
             var appSettings = appSettingsSection.Get<AppSettings>();
             var mongoSettingsSection = Configuration.GetSection("MongoDBSettings");
             var mongoSettings = mongoSettingsSection.Get<MongoDBSettings>();
-            var googleSettingsSection = Configuration.GetSection("Web");
+            var googleSettingsSection = Configuration.GetSection("web");
             var googleSettings = googleSettingsSection.Get<GoogleSecret>();
             #region JWT_Setting
             //--------- JWT settingd ---------------------
@@ -157,6 +159,8 @@ namespace Traiting2
             services.AddSingleton<SmtpConfig>(Configuration.GetSection("SmtpConfig").Get<SmtpConfig>());
             services.AddScoped<IClientService, ClientService>();
             services.AddScoped<IEmailService, EmailService>();
+            services.AddScoped<IProductPhotoService, ProductPhotoService>();
+            services.AddScoped<IAnnouncementService, AnnouncementService>();
             services.AddScoped<IMongoRepoArticle, ArticleService>();
 
             #region Swagger
@@ -201,6 +205,12 @@ namespace Traiting2
                 options.InstanceName = "Training2_";
             });
             #endregion
+
+            //services.AddHostedService<UpdateRedisService>(provider =>
+            //{
+            //    return new UpdateRedisService(provider.GetService<IAnnouncementService>(),
+            //        provider.GetService<IDistributedCache>());
+            //});
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
