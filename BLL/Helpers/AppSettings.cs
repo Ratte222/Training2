@@ -21,5 +21,7 @@ namespace BLL.Helpers
             }
         }
         public int PathSliceDepth { get; set; }
+
+        public int ResizeImageWidht { get; set; }
     }
 }

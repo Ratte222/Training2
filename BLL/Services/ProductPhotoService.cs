@@ -63,7 +63,7 @@ namespace BLL.Services
 
         public async Task<ProductPhoto> GetById(long id)
         {
-            return await GetAsync(i=>i.Id == id);
+            return await GetAsync(i => i.Id == id);
         }
 
         public async Task SaveProductPhoto(List<ProductPhoto> productPhotos)

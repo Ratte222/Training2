@@ -8,6 +8,8 @@ using System.IO;
 using System.Linq;
 using System.Net.Http.Headers;
 using System.Threading.Tasks;
+using ImageMagick;
+using BLL.Helpers;
 
 namespace Traiting2.Controllers
 {
@@ -16,10 +18,11 @@ namespace Traiting2.Controllers
     public class ProductPhotoController : ControllerBase
     {
         private readonly IProductPhotoService _productPhotoService;
+        private readonly AppSettings _appSettings;
 
-        public ProductPhotoController(IProductPhotoService productPhotoService)
+        public ProductPhotoController(IProductPhotoService productPhotoService, AppSettings appSettings)
         {
-            (_productPhotoService) = (productPhotoService);
+            (_productPhotoService, _appSettings) = (productPhotoService, appSettings);
         }
 
         [HttpGet("{id}/{filename}", Name = "GetPhoto")]
@@ -41,10 +44,23 @@ namespace Traiting2.Controllers
             foreach (var file in files)
             {
                 ProductPhoto storedFile = SaveFiles(file, annoucementId);
+                ResizeImage(_productPhotoService.GetFileName(storedFile));
                 storedFiles.Add(storedFile);
             }
             await _productPhotoService.SaveProductPhoto(storedFiles);
             return StatusCode(200, "Files added successfully");
+        }
+
+        private void ResizeImage(string path)
+        {
+            using (var image = new MagickImage(path))
+            {
+                var size = new MagickGeometry(_appSettings.ResizeImageWidht, 0);
+                size.IgnoreAspectRatio = false;
+                image.Resize(size);
+                // Save the result
+                image.Write(path);
+            }
         }
 
         private ProductPhoto SaveFiles(IFormFile file, long annoucementId)
