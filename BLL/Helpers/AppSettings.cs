@@ -23,5 +23,6 @@ namespace BLL.Helpers
         public int PathSliceDepth { get; set; }
 
         public int ResizeImageWidht { get; set; }
+        public string DefaultPathToVideo { get; set; }
     }
 }

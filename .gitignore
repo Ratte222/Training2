@@ -32,7 +32,6 @@ bld/
 [Oo]ut/
 [Ll]og/
 [Ll]ogs/
-[Tt]emp
 
 # Visual Studio 2015/2017 cache/options directory
 .vs/
@@ -365,3 +364,5 @@ FodyWeavers.xsd
 
 #My
 google_secret.json
+[Tt]emp
+[Vv]ideo

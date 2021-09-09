@@ -17,14 +17,14 @@ namespace Traiting2.Controllers
         public IActionResult GetLogo()
         {
             string path = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), "logo");
-            //FileStream fileStream = new FileStream(path, FileMode.Open, FileAccess.Read, FileShare.Read);
-            //return Ok(fileStream);
-            string content = "";
-            using (StreamReader sr = new StreamReader(path))
-            {
-                content = sr.ReadToEnd();
-            }
-            return Content(content);
+            FileStream fileStream = new FileStream(path, FileMode.Open, FileAccess.Read, FileShare.Read);
+            return Ok(fileStream);
+            //string content = "";
+            //using (StreamReader sr = new StreamReader(path))
+            //{
+            //    content = sr.ReadToEnd();
+            //}
+            //return Content(content);
         }
     }
 }

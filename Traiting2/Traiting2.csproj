@@ -14,6 +14,8 @@
     <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="8.1.1" />
     <PackageReference Include="Magick.NET-Q16-AnyCPU" Version="8.3.0" />
     <PackageReference Include="Magick.NET.Core" Version="8.3.0" />
+    <PackageReference Include="Microsoft.AspNet.WebApi.Client" Version="5.2.6" />
+    <PackageReference Include="Microsoft.AspNet.WebApi.Core" Version="5.2.6" />
     <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="3.1.18" />
     <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="3.1.18" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="5.0.9" />
@@ -34,6 +36,7 @@
   <ItemGroup>
     <Folder Include="template\" />
     <Folder Include="Temp\" />
+    <Folder Include="Video\" />
   </ItemGroup>
   <ItemGroup>
     <None Update="logo">
