@@ -24,5 +24,6 @@ namespace BLL.Helpers
 
         public int ResizeImageWidht { get; set; }
         public string DefaultPathToVideo { get; set; }
+        public string DefaultPathToAudio { get; set; }
     }
 }

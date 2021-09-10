@@ -33,7 +33,7 @@ namespace Traiting2.Controllers
         [HttpGet("{name}")]
         public IActionResult GetVideoContent(string name)
         {
-            string filePath = Path.Combine(Directory.GetCurrentDirectory(), _appSettings.DefaultPathToVideo, name);//"TargetVideo.mp4"
+            string filePath = Path.Combine(Directory.GetCurrentDirectory(), _appSettings.DefaultPathToAudio, name);//"TargetVideo.mp4"
 
             Stream video = new FileStream(filePath, FileMode.Open, FileAccess.Read, FileShare.Read);
             return File(video, "video/mp4", enableRangeProcessing: true);
