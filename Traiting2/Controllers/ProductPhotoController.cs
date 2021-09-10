@@ -67,7 +67,7 @@ namespace Traiting2.Controllers
                 return StatusCode(500);
         }
 
-        private async Task<bool> AddImage(Action<string> action, IFormFileCollection files, long annoucementId)
+        private async Task<bool> AddImage(Action<string, Stream> action, IFormFileCollection files, long annoucementId)
         {
             bool result = false;
             List<ProductPhoto> storedFiles = new List<ProductPhoto>();
@@ -76,7 +76,7 @@ namespace Traiting2.Controllers
                 foreach (var file in files)
                 {
                     ProductPhoto storedFile = SaveFiles(file, annoucementId);
-                    action.Invoke(_productPhotoService.GetFileName(storedFile));
+                    action.Invoke(_productPhotoService.GetFileName(storedFile), file.OpenReadStream());
                     storedFiles.Add(storedFile);
                 }
                 await _productPhotoService.SaveProductPhoto(storedFiles);
@@ -99,9 +99,9 @@ namespace Traiting2.Controllers
             return result;
         }
 
-        private void Compression_libvips(string path)
+        private void Compression_libvips(string path, Stream stream)
         {
-            var image = Image.NewFromFile(path);
+            var image = Image.NewFromStream(stream);
             //string oldExtension = Path.GetExtension(path);
             //image.Jpegsave(path);
             string newPath = $"{path}_{DateTime.Now.ToString("yyyy_MM_dd_hh_mm")}.jpeg";
@@ -110,13 +110,15 @@ namespace Traiting2.Controllers
             //{
             //    {"Q", 80}
             //});
-            System.IO.File.Delete(path);
+            //System.IO.File.Delete(path);
             System.IO.File.Move(newPath, path);
         }
 
-        private void ResizeImage_ImageMagick(string path)
+        
+
+        private void ResizeImage_ImageMagick(string path, Stream stream)
         {
-            using (var image = new MagickImage(path))
+            using (var image = new MagickImage(stream))
             {
                 var size = new MagickGeometry(_appSettings.ResizeImageWidht, 0);
                 size.IgnoreAspectRatio = false;
@@ -164,11 +166,11 @@ namespace Traiting2.Controllers
                 if (!Directory.Exists(partialPath))
                     Directory.CreateDirectory(partialPath);
 
-                using (FileStream fs = System.IO.File.Create(fileName))
-                {
-                    file.CopyTo(fs);
-                    fs.Flush();
-                }
+                //using (FileStream fs = System.IO.File.Create(fileName))
+                //{
+                //    file.CopyTo(fs);
+                //    fs.Flush();
+                //}                
             }
             return storedFile;
         }
