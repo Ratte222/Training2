@@ -17,6 +17,7 @@ namespace Traiting2.Controllers
 {
     //https://habr.com/ru/post/422531/
     //https://libvips.github.io/libvips/
+    //https://github.com/kleisauke/net-vips
     [Route("api/[controller]")]
     [ApiController]
     public class ProductPhotoController : ControllerBase
@@ -58,7 +59,7 @@ namespace Traiting2.Controllers
             return StatusCode(200, "Files added successfully");
         }
 
-        [HttpPost("Add_and_Compression_libvips")]
+        [HttpPost("Add_and_CompressionImage_libvips")]
         public async Task<IActionResult> Add_and_Compression_libvips(IFormFileCollection files, long annoucementId)
         {
             if(await AddImage(Compression_libvips, files, annoucementId))
@@ -101,21 +102,25 @@ namespace Traiting2.Controllers
 
         private void Compression_libvips(string path, Stream stream)
         {
-            var image = Image.NewFromStream(stream);
-            //string oldExtension = Path.GetExtension(path);
-            //image.Jpegsave(path);
-            string newPath = $"{path}_{DateTime.Now.ToString("yyyy_MM_dd_hh_mm")}.jpeg";
-            image.Jpegsave(newPath, q: 40, optimizeCoding:true);
-            //image.WriteToFile(newPath, new VOption
-            //{
-            //    {"Q", 80}
-            //});
-            //System.IO.File.Delete(path);
-            System.IO.File.Move(newPath, path);
+            using (var image = Image.NewFromStream(stream))
+            {
+                //string oldExtension = Path.GetExtension(path);
+                //image.Jpegsave(path);
+                string newPath = $"{path}_{DateTime.Now.ToString("yyyy_MM_dd_hh_mm")}.jpeg";
+                image.Jpegsave(newPath, q: 40, optimizeCoding: true);
+                //image.WriteToFile(newPath, new VOption
+                //{
+                //    {"Q", 80}
+                //});
+                //System.IO.File.Delete(path);
+
+                System.IO.File.Move(newPath, path);
+            }
+                
+            
         }
 
         
-
         private void ResizeImage_ImageMagick(string path, Stream stream)
         {
             using (var image = new MagickImage(stream))
@@ -157,7 +162,8 @@ namespace Traiting2.Controllers
                 // concating  FileName + FileExtension
                 newFileName = myUniqueFileName + FileExtension;
                 storedFile.Name = fileName;
-                storedFile.MimeType = $"application/{FileExtension}";
+                //storedFile.MimeType = $"application/{FileExtension}";//!!!!!!!!!!!!!!!!!!!
+                storedFile.MimeType = $"image/jpeg";
                 // Combines two strings into a path.
 
                 fileName = _productPhotoService.GetFileName(storedFile);
