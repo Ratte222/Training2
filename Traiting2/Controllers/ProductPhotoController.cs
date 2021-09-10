@@ -10,19 +10,33 @@ using System.Net.Http.Headers;
 using System.Threading.Tasks;
 using ImageMagick;
 using BLL.Helpers;
+using NetVips;
+using Microsoft.Extensions.Logging;
 
 namespace Traiting2.Controllers
 {
+    //https://habr.com/ru/post/422531/
+    //https://libvips.github.io/libvips/
     [Route("api/[controller]")]
     [ApiController]
     public class ProductPhotoController : ControllerBase
     {
         private readonly IProductPhotoService _productPhotoService;
         private readonly AppSettings _appSettings;
+        private readonly ILogger<ProductPhotoController> _logger;
 
-        public ProductPhotoController(IProductPhotoService productPhotoService, AppSettings appSettings)
+        public ProductPhotoController(IProductPhotoService productPhotoService, AppSettings appSettings,
+            ILogger<ProductPhotoController> logger)
         {
-            (_productPhotoService, _appSettings) = (productPhotoService, appSettings);
+            (_productPhotoService, _appSettings, _logger) = (productPhotoService, appSettings, logger);
+            if (ModuleInitializer.VipsInitialized)
+            {
+                _logger.LogInformation($"Inited libvips {NetVips.NetVips.Version(0)}.{NetVips.NetVips.Version(1)}.{NetVips.NetVips.Version(2)}");
+            }
+            else
+            {
+                _logger.LogError(ModuleInitializer.Exception.Message);
+            }
         }
 
         [HttpGet("{id}/{filename}", Name = "GetPhoto")]
@@ -37,21 +51,70 @@ namespace Traiting2.Controllers
         }
 
 
-        [HttpPost("AddFiles")]
-        public async Task<IActionResult> AddFiles(IFormFileCollection files, long annoucementId)
-        {
-            List<ProductPhoto> storedFiles = new List<ProductPhoto>();
-            foreach (var file in files)
-            {
-                ProductPhoto storedFile = SaveFiles(file, annoucementId);
-                ResizeImage(_productPhotoService.GetFileName(storedFile));
-                storedFiles.Add(storedFile);
-            }
-            await _productPhotoService.SaveProductPhoto(storedFiles);
+        [HttpPost("Add_and_ResizeImage_ImageMagick")]
+        public async Task<IActionResult> Add_and_ResizeImage_ImageMagick(IFormFileCollection files, long annoucementId)
+        {            
+            await AddImage(ResizeImage_ImageMagick, files, annoucementId);
             return StatusCode(200, "Files added successfully");
         }
 
-        private void ResizeImage(string path)
+        [HttpPost("Add_and_Compression_libvips")]
+        public async Task<IActionResult> Add_and_Compression_libvips(IFormFileCollection files, long annoucementId)
+        {
+            if(await AddImage(Compression_libvips, files, annoucementId))
+                return StatusCode(200, "Files added successfully");
+            else
+                return StatusCode(500);
+        }
+
+        private async Task<bool> AddImage(Action<string> action, IFormFileCollection files, long annoucementId)
+        {
+            bool result = false;
+            List<ProductPhoto> storedFiles = new List<ProductPhoto>();
+            try
+            {
+                foreach (var file in files)
+                {
+                    ProductPhoto storedFile = SaveFiles(file, annoucementId);
+                    action.Invoke(_productPhotoService.GetFileName(storedFile));
+                    storedFiles.Add(storedFile);
+                }
+                await _productPhotoService.SaveProductPhoto(storedFiles);
+                result = true;
+            }
+            catch(Exception ex)
+            {
+                _logger.LogWarning($"InnerException = {ex?.InnerException?.ToString()} \r\n" +
+                            $"Message = {ex?.Message?.ToString()} \r\n" +
+                            $"Source = {ex?.Source?.ToString()} \r\n" +
+                            $"StackTrace = {ex?.StackTrace?.ToString()} \r\n" +
+                            $"TargetSite = {ex?.TargetSite?.ToString()}");
+                foreach(var i in storedFiles)
+                {
+                    string path = _productPhotoService.GetFileName(i);
+                    if(System.IO.File.Exists(path))
+                        System.IO.File.Delete(path);
+                }
+            }
+            return result;
+        }
+
+        private void Compression_libvips(string path)
+        {
+            var image = Image.NewFromFile(path);
+            //string oldExtension = Path.GetExtension(path);
+            //image.Jpegsave(path);
+            string newPath = $"{path}_{DateTime.Now.ToString("yyyy_MM_dd_hh_mm")}.jpeg";
+            image.Jpegsave(newPath, q: 40, optimizeCoding:true);
+            //image.WriteToFile(newPath, new VOption
+            //{
+            //    {"Q", 80}
+            //});
+            System.IO.File.Delete(path);
+            System.IO.File.Move(newPath, path);
+        }
+
+        private void ResizeImage_ImageMagick(string path)
         {
             using (var image = new MagickImage(path))
             {
