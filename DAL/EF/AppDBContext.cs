@@ -25,8 +25,8 @@ namespace DAL.EF
             //    {                
             //        optionsBuilder.UseSqlServer(@"Server=(localdb)\\mssqllocaldb;Database=SignalR_Training;Trusted_Connection=True;MultipleActiveResultSets=true");
             //    }
-            optionsBuilder.EnableSensitiveDataLogging(true);
-            optionsBuilder.LogTo(Console.WriteLine);
+            //optionsBuilder.EnableSensitiveDataLogging(true);
+            //optionsBuilder.LogTo(Console.WriteLine);
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)

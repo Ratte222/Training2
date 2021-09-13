@@ -1,4 +1,4 @@
-#define FillTable
+//#define FillTable
 
 using BLL.Helpers;
 using BLL.Interfaces;
@@ -68,10 +68,10 @@ namespace Traiting2
             services.Configure<IdentityOptions>(options =>
             {
                 // Password settings.
-                options.Password.RequireDigit = true;
-                options.Password.RequireLowercase = true;
+                options.Password.RequireDigit = false;
+                options.Password.RequireLowercase = false;
                 options.Password.RequireNonAlphanumeric = false;
-                options.Password.RequireUppercase = true;
+                options.Password.RequireUppercase = false;
                 options.Password.RequiredLength = 8;
                 options.Password.RequiredUniqueChars = 0;
 
@@ -223,7 +223,9 @@ namespace Traiting2
             applicationContext.Database.Migrate();
             DbInitializer.Initialize(applicationContext, userManager, roleManager);
 #if FillTable
-            logger.LogError( DbInitializer.FillMoreRandomData(applicationContext, userManager, 100));
+            string erroeMessage = DbInitializer.FillMoreRandomData(applicationContext, userManager, 5000);
+            logger.LogError(erroeMessage);
+            DbInitializer.FillProductPhoto(applicationContext);
 #endif
             app.UseSwagger();
             app.UseSwaggerUI(c =>

@@ -58,10 +58,10 @@ namespace Traiting2.Controllers
             int? pageNumber = null)
         {
             PageResponse<ClientDTO> pageResponse = new PageResponse<ClientDTO>(pageLength, pageNumber);
-            List<Client> announcements = _clientService.GetAll_Queryable().ToList();
-            pageResponse.TotalItems = announcements.Count();
+            List<Client> clients = _clientService.GetAll_Queryable().ToList();
+            pageResponse.TotalItems = clients.Count();
             pageResponse.Items = _mapper.Map<IEnumerable<Client>, List<ClientDTO>>(
-                announcements.Skip(pageResponse.Skip).Take(pageResponse.Take));
+                clients.Skip(pageResponse.Skip).Take(pageResponse.Take));
             return Ok(pageResponse);
         }
     }

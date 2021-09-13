@@ -12,6 +12,7 @@ using ImageMagick;
 using BLL.Helpers;
 using NetVips;
 using Microsoft.Extensions.Logging;
+using AuxiliaryLib.Helpers;
 
 namespace Traiting2.Controllers
 {
@@ -38,6 +39,17 @@ namespace Traiting2.Controllers
             {
                 _logger.LogError(ModuleInitializer.Exception.Message);
             }
+        }
+
+        [HttpGet("GetAllInformationAboutPhotos")]
+        public IActionResult GetAllInformationAboutPhotos(int? pageLength = null,
+            int? pageNumber = null)
+        {
+            PageResponse<ProductPhoto> pageResponse = new PageResponse<ProductPhoto>(pageLength, pageNumber);
+            List<ProductPhoto> productPhotos = _productPhotoService.GetAll_Queryable().ToList();
+            pageResponse.TotalItems = productPhotos.Count();
+            pageResponse.Items = productPhotos.Skip(pageResponse.Skip).Take(pageResponse.Take).ToList();
+            return Ok(pageResponse);
         }
 
         [HttpGet("{id}/{filename}", Name = "GetPhoto")]

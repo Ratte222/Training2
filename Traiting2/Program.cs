@@ -10,6 +10,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Traiting2.BackgroundService;
+using BenchmarkDotNet.Running;
 
 namespace Traiting2
 {
@@ -17,7 +18,9 @@ namespace Traiting2
     {
         public static void Main(string[] args)
         {
-            CreateHostBuilder(args).Build().Run();
+            var host = CreateHostBuilder(args).Build();
+            //BenchmarkRunner.Run<Benchmark.Benchy>();
+            host.Run();
         }
 
         public static IHostBuilder CreateHostBuilder(string[] args) =>
