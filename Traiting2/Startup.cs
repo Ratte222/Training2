@@ -1,3 +1,5 @@
+#define FillTable
+
 using BLL.Helpers;
 using BLL.Interfaces;
 using BLL.Services;
@@ -215,10 +217,14 @@ namespace Traiting2
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env,
-            AppDBContext applicationContext, UserManager<Client> userManager, RoleManager<IdentityRole> roleManager)
+            AppDBContext applicationContext, UserManager<Client> userManager, RoleManager<IdentityRole> roleManager,
+            ILogger<Startup> logger)
         {
             applicationContext.Database.Migrate();
             DbInitializer.Initialize(applicationContext, userManager, roleManager);
+#if FillTable
+            logger.LogError( DbInitializer.FillMoreRandomData(applicationContext, userManager, 100));
+#endif
             app.UseSwagger();
             app.UseSwaggerUI(c =>
             {

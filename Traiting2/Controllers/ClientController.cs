@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using AuxiliaryLib.Helpers;
 using BLL.DTO.Client;
 using BLL.Interfaces;
 using DAL.Model;
@@ -50,6 +51,18 @@ namespace Traiting2.Controllers
                 return NotFound();
             }            
             return Ok(_mapper.Map<Client, ClientDTO>(client));
+        }
+
+        [HttpGet("GetClients")]
+        public IActionResult GetClients(int? pageLength = null,
+            int? pageNumber = null)
+        {
+            PageResponse<ClientDTO> pageResponse = new PageResponse<ClientDTO>(pageLength, pageNumber);
+            List<Client> announcements = _clientService.GetAll_Queryable().ToList();
+            pageResponse.TotalItems = announcements.Count();
+            pageResponse.Items = _mapper.Map<IEnumerable<Client>, List<ClientDTO>>(
+                announcements.Skip(pageResponse.Skip).Take(pageResponse.Take));
+            return Ok(pageResponse);
         }
     }
 }

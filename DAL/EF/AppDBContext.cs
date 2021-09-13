@@ -19,13 +19,15 @@ namespace DAL.EF
             
         }
 
-        //protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-        //{
-        //    if (!optionsBuilder.IsConfigured)
-        //    {                
-        //        optionsBuilder.UseSqlServer(@"Server=(localdb)\\mssqllocaldb;Database=SignalR_Training;Trusted_Connection=True;MultipleActiveResultSets=true");
-        //    }            
-        //}
+        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+        {
+            //    if (!optionsBuilder.IsConfigured)
+            //    {                
+            //        optionsBuilder.UseSqlServer(@"Server=(localdb)\\mssqllocaldb;Database=SignalR_Training;Trusted_Connection=True;MultipleActiveResultSets=true");
+            //    }
+            optionsBuilder.EnableSensitiveDataLogging(true);
+            optionsBuilder.LogTo(Console.WriteLine);
+        }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -37,7 +39,14 @@ namespace DAL.EF
                     .HasDefaultValueSql(null);
                 }
             );
-            modelBuilder.Entity<Announcement>().HasKey(i => i.Id);
+            modelBuilder.Entity<Announcement>(
+                m=>
+                {
+                    m.HasKey(i => i.Id);
+                    m.HasOne(i => i.Client)
+                    .WithMany(j => j.Announcements)
+                    .HasForeignKey(i => i.ClientId);
+                });
             modelBuilder.Entity<ProductPhoto>(
                 m =>
                 {

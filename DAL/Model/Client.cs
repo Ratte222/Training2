@@ -16,7 +16,7 @@ namespace DAL.Model
         public DateTime RegistrationDate { get; set; }
         public DateTime DateOfBirth { get; set; }
         public DateTime? RemoveData { get; set; }
-
+        public ICollection<Announcement> Announcements { get; set; }
     }
 
     public class AccountRole
