@@ -1,6 +1,6 @@
 # What is done
 1. Redis caching. 
-    - added data to redis happens in the Traiting2.BackgroundService.UpdateRedisService
+    - added data to redis happens in the Training2.BackgroundService.UpdateRedisService
     - there is one endpoint (https://localhost:5001/api/Announcement/GetMostPopularAnnouncement) reading data from redis
     - command for docker "docker run --name my-redis -p 5002:6379 -d redis"
 2. Work with MongoDB

@@ -7,7 +7,8 @@ using DAL.Model;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Caching.Distributed;
-using System;
+using System.Linq;
+using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.Json;
@@ -75,14 +76,19 @@ namespace Training2.Controllers
         }
 
         [HttpGet("GetAnnouncements")]
-        public IActionResult GetAnnouncements(int? pageLength = null,
+        public async Task<IActionResult> GetAnnouncements(int? pageLength = null,
             int? pageNumber = null)
         {
+            //PageResponse<AnnouncementDTO> pageResponse = new PageResponse<AnnouncementDTO>(pageLength, pageNumber);
+            //List<Announcement> announcements = _announcementService.GetAll_Queryable().ToList();
+            //pageResponse.TotalItems = announcements.Count();
+            //pageResponse.Items = _mapper.Map<IEnumerable<Announcement>, List<AnnouncementDTO>>(
+            //    announcements.Skip(pageResponse.Skip).Take(pageResponse.Take));
             PageResponse<AnnouncementDTO> pageResponse = new PageResponse<AnnouncementDTO>(pageLength, pageNumber);
-            List<Announcement> announcements = _announcementService.GetAll_Queryable().ToList();
-            pageResponse.TotalItems = announcements.Count();
-            pageResponse.Items = _mapper.Map<IEnumerable<Announcement>, List<AnnouncementDTO>>(
-                announcements.Skip(pageResponse.Skip).Take(pageResponse.Take));
+            var announcements = _announcementService.GetAll_Queryable();
+            pageResponse.TotalItems = await announcements.CountAsync();
+            pageResponse.Items = _mapper.Map<List<Announcement>, List<AnnouncementDTO>>(
+                await announcements.Skip(pageResponse.Skip).Take(pageResponse.Take).ToListAsync());
             return Ok(pageResponse);
         }
     }
