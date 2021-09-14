@@ -1,0 +1,13 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>Training2</name>
+    </assembly>
+    <members>
+        <member name="M:Training2.Controllers.AccountController.GoogleLogin(System.String)">
+            <summary>
+            Reset password
+            </summary>
+        </member>
+    </members>
+</doc>
