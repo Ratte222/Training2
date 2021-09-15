@@ -14,7 +14,7 @@ using System.Threading.Tasks;
 namespace ProjectForBenchmark.Benchmark
 {
     [MemoryDiagnoser]
-    [SimpleJob(RunStrategy.ColdStart, targetCount: 10)]
+    [SimpleJob(RunStrategy.ColdStart)]
     [MinColumn, MaxColumn, MeanColumn, MedianColumn]
     public class IncludeBanchy
     {
@@ -39,7 +39,6 @@ namespace ProjectForBenchmark.Benchmark
         public PageResponse<Announcement> GetClient_IncludeAnnouncement_ThenIncludeProductPhoto()
         {
             PageResponse<Announcement> pageResponse = new PageResponse<Announcement>(_pageLength, _pageNumber);
-
             Client client = _context.Clients.Include(i => i.Announcements).ThenInclude(j => j.ProductPhotos)
                 .AsNoTracking().FirstOrDefault(i => i.Id == _clientId);
             pageResponse.TotalItems = client.Announcements.Count;

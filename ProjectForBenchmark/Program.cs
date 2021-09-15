@@ -28,7 +28,7 @@ namespace ProjectForBenchmark
             //BenchmarkRunner.Run<TestBency>();
             //BenchmarkRunner.Run<AnnouncementBenchy>();
             //BenchmarkRunner.Run<EntitySearchBenchy>();
-            //BenchmarkRunner.Run<IncludeBanchy>();
+            BenchmarkRunner.Run<IncludeBanchy>();
             Console.WriteLine("Hello World!");
         }
 
