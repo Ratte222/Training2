@@ -14,8 +14,9 @@ using ProjectForBenchmark.Benchmark;
 namespace ProjectForBenchmark
 {
     //https://benchmarkdotnet.org/articles/samples/IntroConfigSource.html
-    class Program
+    public class Program
     {
+        public const string connection = "Server=(localdb)\\mssqllocaldb;Database=Training2;Trusted_Connection=True;MultipleActiveResultSets=true";
         static void Main(string[] args)
         {
             ServiceProvider services = null;
@@ -23,16 +24,42 @@ namespace ProjectForBenchmark
             startup.ConfigureService(ref services);
             var scope = services.CreateScope();
             //Test(scope);
-            
+
             //BenchmarkRunner.Run<TestBency>();
             //BenchmarkRunner.Run<AnnouncementBenchy>();
-            BenchmarkRunner.Run<EntitySearchBenchy>();
+            //BenchmarkRunner.Run<EntitySearchBenchy>();
+            //BenchmarkRunner.Run<IncludeBanchy>();
             Console.WriteLine("Hello World!");
         }
 
         private static void Test(IServiceScope scope)
         {
             var _context = scope.ServiceProvider.GetRequiredService<AppDBContext>();
+            #region JoinTable
+            var query = _context.Announcements.Where(i => i.ClientId == "0004815d-ee49-478a-b3ee-f79ae94663b1")
+                .Join(_context.ProductPhotos,
+                ann => ann.Id,
+                photo => photo.Announcement.Id,
+                (ann, photo) => new Announcement()
+                {
+                    Id = ann.Id,
+                    Name = ann.Name,
+                    Description = ann.Description,
+                    Cost = ann.Cost,
+                    ProductPhotos = new[] {
+                        new ProductPhoto()
+                        {
+                            Id = photo.Id,
+                            Name = photo.Name,
+                            AnnouncementId = ann.Id
+                        } }
+                }).AsNoTracking().ToList();
+            //var query_ = query.GroupBy().ToList();
+            var query_ = _context.Announcements.Where(i => i.ClientId == "0004815d-ee49-478a-b3ee-f79ae94663b1")
+                .Include(j => j.ProductPhotos)
+                .AsNoTracking().ToList();
+            query = query.Distinct().ToList();
+            #endregion
             #region FindProductPhoto
             //Predicate<ProductPhoto> predicate = i => i.Id == 4360901;
             //var productPhoto =  _context.ProductPhotos.Find(predicate);

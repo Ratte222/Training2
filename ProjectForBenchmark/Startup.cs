@@ -16,8 +16,7 @@ namespace ProjectForBenchmark
             //setup our DI
             var services = new ServiceCollection()
                 .AddAutoMapper(typeof(AutoMapperProfile));
-            string connection = "Server=(localdb)\\mssqllocaldb;Database=Training2;Trusted_Connection=True;MultipleActiveResultSets=true";
-            services.AddDbContext<DAL.EF.AppDBContext>(options => options.UseSqlServer(connection), ServiceLifetime.Transient);
+            services.AddDbContext<DAL.EF.AppDBContext>(options => options.UseSqlServer(Program.connection), ServiceLifetime.Transient);
             services.AddScoped<IAnnouncementService, AnnouncementService>();
             serviceCollection = services.BuildServiceProvider();
         }

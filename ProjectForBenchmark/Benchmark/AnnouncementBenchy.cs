@@ -39,9 +39,8 @@ namespace ProjectForBenchmark.Benchmark
         [GlobalSetup]
         public void GlobalSetup()
         {
-            string connection = "Server=(localdb)\\mssqllocaldb;Database=Training2;Trusted_Connection=True;MultipleActiveResultSets=true";
             DbContextOptionsBuilder<AppDBContext> dbContextOptionsBuilder = new DbContextOptionsBuilder<AppDBContext>();
-            dbContextOptionsBuilder.UseSqlServer(connection);
+            dbContextOptionsBuilder.UseSqlServer(Program.connection);
             _context =  new AppDBContext(dbContextOptionsBuilder.Options);
             _announcementService = new AnnouncementService(_context);
         }
