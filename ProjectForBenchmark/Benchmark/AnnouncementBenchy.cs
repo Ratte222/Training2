@@ -14,6 +14,7 @@ using BLL.Services;
 using BenchmarkDotNet.Engines;
 using System.Threading.Tasks;
 using System.Linq;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace ProjectForBenchmark.Benchmark
 {
@@ -39,10 +40,18 @@ namespace ProjectForBenchmark.Benchmark
         [GlobalSetup]
         public void GlobalSetup()
         {
-            DbContextOptionsBuilder<AppDBContext> dbContextOptionsBuilder = new DbContextOptionsBuilder<AppDBContext>();
-            dbContextOptionsBuilder.UseSqlServer(Program.connection);
-            _context =  new AppDBContext(dbContextOptionsBuilder.Options);
-            _announcementService = new AnnouncementService(_context);
+            //DbContextOptionsBuilder<AppDBContext> dbContextOptionsBuilder = new DbContextOptionsBuilder<AppDBContext>();
+            //dbContextOptionsBuilder.UseSqlServer(Program.connection);
+            //_context =  new AppDBContext(dbContextOptionsBuilder.Options);
+            //_announcementService = new AnnouncementService(_context);
+            var services = new ServiceCollection()
+                .AddDbContext<DAL.EF.AppDBContext>(options =>
+                options.UseMySql(Program.connection, new MySqlServerVersion(new Version(8, 0, 26))),
+                ServiceLifetime.Transient);
+            services.AddScoped<IAnnouncementService, AnnouncementService>();
+            var scope = services.BuildServiceProvider().CreateScope();
+            _context = scope.ServiceProvider.GetRequiredService<AppDBContext>();
+            _announcementService = scope.ServiceProvider.GetRequiredService<IAnnouncementService>();
         }
 
         [Benchmark]
@@ -82,8 +91,8 @@ namespace ProjectForBenchmark.Benchmark
             Announcement temp = new Announcement();
             pageResponse.TotalItems = _context.Announcements.Count();
             pageResponse.Items = _context.Announcements.FromSqlRaw($"SELECT * FROM {nameof(Announcement)}s" +
-                $" WHERE {nameof(temp.Category)} = {(int)Category.auto} ORDER BY {nameof(temp.Cost)} asc " +
-                    $"OFFSET {pageResponse.Skip} ROWS FETCH NEXT {pageResponse.Take} ROWS ONLY").ToList();
+                $" WHERE {nameof(temp.Category)} = {(int)Category.auto} ORDER BY {nameof(temp.Cost)} ASC " +
+                    $"LIMIT {pageResponse.Skip}, {pageResponse.Take}").ToList();
             return pageResponse;
         }
 
@@ -144,12 +153,11 @@ namespace ProjectForBenchmark.Benchmark
         {
             PageResponse<Announcement> pageResponse = new PageResponse<Announcement>(_pageLength, _pageNumber);
             Announcement temp = new Announcement();
-            //pageResponse.TotalItems = _context.Announcements.Count();
             pageResponse.TotalItems = _context.Announcements.FromSqlRaw($"SELECT * FROM {nameof(Announcement)}s" +
                 $" WHERE {nameof(temp.Category)} = {(int)Category.auto}").Count();
             pageResponse.Items = _context.Announcements.FromSqlRaw($"SELECT * FROM {nameof(Announcement)}s" +
-                $" WHERE {nameof(temp.Category)} = {(int)Category.auto} ORDER BY {nameof(temp.Cost)} asc " +
-                    $"OFFSET {pageResponse.Skip} ROWS FETCH NEXT {pageResponse.Take} ROWS ONLY").ToList();
+                $" WHERE {nameof(temp.Category)} = {(int)Category.auto} ORDER BY {nameof(temp.Cost)} ASC " +
+                    $"LIMIT {pageResponse.Skip}, {pageResponse.Take}").ToList();
             return pageResponse;
         }
     }

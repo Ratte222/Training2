@@ -6,6 +6,7 @@ using BLL.Services;
 using DAL.EF;
 using DAL.Model;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -22,17 +23,25 @@ namespace ProjectForBenchmark.Benchmark
         private IClientService _clientService;
         private readonly int _pageLength = 15;
         private readonly int _pageNumber = 5;
-        private readonly string _clientId = "0004815d-ee49-478a-b3ee-f79ae94663b1", _userName = "anq2qO9tHC4UQJ36PC7wRpAd0",
-            _email= "Pw8sKNC9BjrLEKfd4QsM9ILWw@gmail.com";
+        private readonly string _clientId = "47597606-fab3-49e1-a228-02b3679c3c74", _userName = "zFbtrKn1WGJNOQ5XsViQRqsVO",
+            _email= " 8rXdDDyNin1t3jd8wEXmnEds6@gmail.com";
 
         [GlobalSetup]
         public void GlobalSetup()
         {
             //string connection = "Server=(localdb)\\mssqllocaldb;Database=Training2;Trusted_Connection=True;MultipleActiveResultSets=true";
-            DbContextOptionsBuilder<AppDBContext> dbContextOptionsBuilder = new DbContextOptionsBuilder<AppDBContext>();
-            dbContextOptionsBuilder.UseSqlServer(Program.connection);
-            _context = new AppDBContext(dbContextOptionsBuilder.Options);
-            _clientService = new ClientService(_context);
+            //DbContextOptionsBuilder<AppDBContext> dbContextOptionsBuilder = new DbContextOptionsBuilder<AppDBContext>();
+            //dbContextOptionsBuilder.UseSqlServer(Program.connection);
+            //_context = new AppDBContext(dbContextOptionsBuilder.Options);
+            //_clientService = new ClientService(_context);
+            var services = new ServiceCollection()
+                .AddDbContext<DAL.EF.AppDBContext>(options =>
+                options.UseMySql(Program.connection, new MySqlServerVersion(new Version(8, 0, 26))),
+                ServiceLifetime.Transient);
+            services.AddScoped<IClientService, ClientService>();
+            var scope = services.BuildServiceProvider().CreateScope();
+            _context = scope.ServiceProvider.GetRequiredService<AppDBContext>();
+            _clientService = scope.ServiceProvider.GetRequiredService<IClientService>();
         }
 
         [Benchmark]

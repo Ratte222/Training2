@@ -8,6 +8,8 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Training2.Extensions;
+using Microsoft.EntityFrameworkCore;
+using BLL.Helpers;
 
 namespace Training2.BackgroundService
 {
@@ -15,6 +17,7 @@ namespace Training2.BackgroundService
     {
         private IAnnouncementService _announcementService;
         private IDistributedCache _cache;
+        private AppSettings _appSettings;
         private readonly IServiceProvider _services;
         public UpdateRedisService(/*IAnnouncementService announcementService, IDistributedCache cache*/
             IServiceProvider Services)
@@ -29,6 +32,7 @@ namespace Training2.BackgroundService
             var scope = _services.CreateScope();
             _announcementService = scope.ServiceProvider.GetRequiredService<IAnnouncementService>();
             _cache = scope.ServiceProvider.GetRequiredService<IDistributedCache>();
+            _appSettings = scope.ServiceProvider.GetRequiredService<AppSettings>();
             //_announcementService = _services.GetService<IAnnouncementService>();
             //_cache = _services.GetService<IDistributedCache>();
             while (!stoppingToken.IsCancellationRequested)
@@ -36,10 +40,11 @@ namespace Training2.BackgroundService
                 //string recordKey = $"PopularAnnouncementData_{DateTime.Now.ToString("yyyyMMdd_hhmm")}";
                 string recordKey = $"PopularAnnouncementData";
 
-                List<Announcement> announcements = _announcementService.GetAll_Queryable().OrderByDescending(i => i.Views)
-                        .Take(20).ToList();
-                await _cache.SetRecordAsync<List<Announcement>>(recordKey, announcements);
-                await Task.Delay(TimeSpan.FromMinutes(1), stoppingToken);
+                List<Announcement> announcements = _announcementService.GetAll_Queryable()
+                    .OrderByDescending(i => i.Views)
+                        .Take(_appSettings.AnnouncementsInRedisCache).Include(i => i.ProductPhotos).ToList();
+                await _cache.SetRecordAsync<List<Announcement>>(recordKey, announcements, TimeSpan.FromSeconds(320));
+                await Task.Delay(TimeSpan.FromMinutes(5), stoppingToken);
             }
         }
     }

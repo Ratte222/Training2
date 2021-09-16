@@ -5,6 +5,7 @@ using BLL.Services;
 using DAL.EF;
 using DAL.Model;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -24,10 +25,13 @@ namespace ProjectForBenchmark.Benchmark
         [GlobalSetup]
         public void GlobalSetup()
         {
-            DbContextOptionsBuilder<AppDBContext> dbContextOptionsBuilder = new DbContextOptionsBuilder<AppDBContext>();
-            dbContextOptionsBuilder.UseSqlServer(Program.connection);
-            _context = new AppDBContext(dbContextOptionsBuilder.Options);
-            
+            var services = new ServiceCollection()
+                .AddDbContext<DAL.EF.AppDBContext>(options =>
+                options.UseMySql(Program.connection, new MySqlServerVersion(new Version(8, 0, 26))),
+                ServiceLifetime.Transient);
+            var scope = services.BuildServiceProvider().CreateScope();
+            _context = scope.ServiceProvider.GetRequiredService<AppDBContext>();
+
         }
 
         [Benchmark]

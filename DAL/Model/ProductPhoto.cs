@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Text;
@@ -20,6 +21,7 @@ namespace DAL.Model
         public bool IsPublic { get; set; }
 
         public long AnnouncementId { get; set; }
+        [JsonIgnore]//Ignore go redis
         public Announcement Announcement { get; set; }
 
         public ProductPhoto() : this(0) { }

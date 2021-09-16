@@ -51,7 +51,8 @@ namespace Training2
             services.AddControllers();
 
             string connection = Configuration.GetConnectionString("DefaultConnection");
-            services.AddDbContext<DAL.EF.AppDBContext>(options => options.UseSqlServer(connection), ServiceLifetime.Transient);
+            services.AddDbContext<DAL.EF.AppDBContext>(options => options.UseMySql(connection, new MySqlServerVersion(new Version(8, 0, 26))),
+                ServiceLifetime.Transient);
             var appSettingsSection = Configuration.GetSection("AppSettings");
             var appSettings = appSettingsSection.Get<AppSettings>();
             var mongoSettingsSection = Configuration.GetSection("MongoDBSettings");
@@ -223,7 +224,7 @@ namespace Training2
             applicationContext.Database.Migrate();
             DbInitializer.Initialize(applicationContext, userManager, roleManager);
 #if FillTable
-            string erroeMessage = DbInitializer.FillMoreRandomData(applicationContext, userManager, 10000);
+            string erroeMessage = DbInitializer.FillMoreRandomData(applicationContext, userManager, 6000);
             logger.LogError(erroeMessage);
             DbInitializer.FillProductPhoto(applicationContext);
 #endif

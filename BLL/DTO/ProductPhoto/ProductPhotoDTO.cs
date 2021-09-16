@@ -16,7 +16,7 @@ namespace BLL.DTO.ProductPhoto
         public bool IsPublic { get; set; }
 
         public long AnnouncementId { get; set; }
-        [JsonIgnore]
+        [JsonIgnore]//ignore for method "Ok"
         public AnnouncementDTO Announcement { get; set; }
     }
 }

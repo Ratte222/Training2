@@ -16,25 +16,28 @@ namespace ProjectForBenchmark
     //https://benchmarkdotnet.org/articles/samples/IntroConfigSource.html
     public class Program
     {
-        public const string connection = "Server=(localdb)\\mssqllocaldb;Database=Training2;Trusted_Connection=True;MultipleActiveResultSets=true";
+        public const string connection = "server=localhost;user=artur;password=12345678;database=trainingdb2;";
         static void Main(string[] args)
         {
             ServiceProvider services = null;
             Startup startup = new Startup();
             startup.ConfigureService(ref services);
             var scope = services.CreateScope();
-            //Test(scope);
+            Test(scope);
 
             //BenchmarkRunner.Run<TestBency>();
             //BenchmarkRunner.Run<AnnouncementBenchy>();
             //BenchmarkRunner.Run<EntitySearchBenchy>();
-            BenchmarkRunner.Run<IncludeBanchy>();
+            //BenchmarkRunner.Run<IncludeBanchy>();
+            //BenchmarkRunner.Run<RedisBenchy>();
             Console.WriteLine("Hello World!");
         }
+
 
         private static void Test(IServiceScope scope)
         {
             var _context = scope.ServiceProvider.GetRequiredService<AppDBContext>();
+            SQL_Where_Count_OrderBy_Skip_Take_ToList(_context);
             #region JoinTable
             var query = _context.Announcements.Where(i => i.ClientId == "0004815d-ee49-478a-b3ee-f79ae94663b1")
                 .Join(_context.ProductPhotos,
@@ -76,9 +79,24 @@ namespace ProjectForBenchmark
             pageResponse.TotalItems = _context.Announcements.FromSqlRaw($"SELECT * FROM {nameof(Announcement)}s" +
                 $" WHERE {nameof(temp.Category)} = {(int)Category.auto}").Count();
             pageResponse.Items = _context.Announcements.FromSqlRaw($"SELECT * FROM {nameof(Announcement)}s" +
-                $" WHERE {nameof(temp.Category)} = {(int)Category.auto} ORDER BY {nameof(temp.Cost)} asc " +
-                    $"OFFSET {pageResponse.Skip} ROWS FETCH NEXT {pageResponse.Take} ROWS ONLY").ToList();
+                $" WHERE {nameof(temp.Category)} = {(int)Category.auto} ORDER BY {nameof(temp.Cost)} ASC " +
+                    $"LIMIT {pageResponse.Skip}, {pageResponse.Take}").ToList();
+            //pageResponse.Items = _context.Announcements.FromSqlRaw($"SELECT * FROM {nameof(Announcement)}s" +
+            //    $" WHERE {nameof(temp.Category)} = {(int)Category.auto} ORDER BY {nameof(temp.Cost)} asc " +
+            //        $"OFFSET {pageResponse.Skip} ROWS FETCH NEXT {pageResponse.Take} ROWS ONLY").ToList();
             #endregion
+        }
+
+        public static PageResponse<Announcement> SQL_Where_Count_OrderBy_Skip_Take_ToList(AppDBContext _context)
+        {
+            PageResponse<Announcement> pageResponse = new PageResponse<Announcement>(100, 1003);
+            Announcement temp = new Announcement();
+            pageResponse.TotalItems = _context.Announcements.FromSqlRaw($"SELECT * FROM {nameof(Announcement)}s" +
+                $" WHERE {nameof(temp.Category)} = {(int)Category.auto}").Count();
+            pageResponse.Items = _context.Announcements.FromSqlRaw($"SELECT * FROM {nameof(Announcement)}s" +
+                $" WHERE {nameof(temp.Category)} = {(int)Category.auto} ORDER BY {nameof(temp.Cost)} ASC " +
+                    $"LIMIT {pageResponse.Skip}, {pageResponse.Take}").ToList();
+            return pageResponse;
         }
     }
 }
