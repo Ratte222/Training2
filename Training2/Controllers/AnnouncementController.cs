@@ -50,10 +50,10 @@ namespace Training2.Controllers
             if (announcements is null)
             {
                 announcements = _announcementService.GetAll_Queryable().OrderByDescending(i => i.Views)
-                    .Take(pageResponse.Take).ToList();
+                    .Take(pageResponse.Take).Include(i => i.ProductPhotos).ToList();
                 //await _cache.SetRecordAsync<List<Announcement>>(recordKey, announcements);
             }
-            pageResponse.TotalItems = announcements.Count();
+            pageResponse.TotalItems = _appSettings.AnnouncementsInRedisCache;//announcements.Count();
             pageResponse.Items = _mapper.Map<IEnumerable<Announcement>, List<AnnouncementDTO>>(
                 announcements.Skip(pageResponse.Skip).Take(pageResponse.Take));
             return Ok(pageResponse);
@@ -88,7 +88,8 @@ namespace Training2.Controllers
             var announcements = _announcementService.GetAll_Queryable();
             pageResponse.TotalItems = await announcements.CountAsync();
             pageResponse.Items = _mapper.Map<List<Announcement>, List<AnnouncementDTO>>(
-                await announcements.Skip(pageResponse.Skip).Take(pageResponse.Take).ToListAsync());
+                await announcements.Skip(pageResponse.Skip).Take(pageResponse.Take)
+                .Include(i => i.ProductPhotos).ToListAsync());
             return Ok(pageResponse);
         }
     }

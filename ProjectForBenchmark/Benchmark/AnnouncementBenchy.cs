@@ -14,6 +14,7 @@ using BLL.Services;
 using BenchmarkDotNet.Engines;
 using System.Threading.Tasks;
 using System.Linq;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace ProjectForBenchmark.Benchmark
 {
@@ -26,8 +27,8 @@ namespace ProjectForBenchmark.Benchmark
         private IAnnouncementService _announcementService;
         private AppDBContext _context;
 
-        private readonly int _pageLength = 100;
-        private readonly int _pageNumber = 10003;
+        private readonly int _pageLength = 50;
+        private readonly int _pageNumber = 1003;
 
         //private readonly IMapper _mapper;
         //public AnnouncementBenchy(IAnnouncementService announcementService, IMapper mapper)
@@ -39,10 +40,19 @@ namespace ProjectForBenchmark.Benchmark
         [GlobalSetup]
         public void GlobalSetup()
         {
-            DbContextOptionsBuilder<AppDBContext> dbContextOptionsBuilder = new DbContextOptionsBuilder<AppDBContext>();
-            dbContextOptionsBuilder.UseSqlServer(Program.connection);
-            _context =  new AppDBContext(dbContextOptionsBuilder.Options);
-            _announcementService = new AnnouncementService(_context);
+            //DbContextOptionsBuilder<AppDBContext> dbContextOptionsBuilder = new DbContextOptionsBuilder<AppDBContext>();
+            //dbContextOptionsBuilder.UseSqlServer(Program.connection);
+            //_context =  new AppDBContext(dbContextOptionsBuilder.Options);
+            //_announcementService = new AnnouncementService(_context);
+            var services = new ServiceCollection()
+                .AddDbContext<DAL.EF.AppDBContext>(options =>
+                options.UseSqlServer(Program.connection,
+                sqlServerOptions => sqlServerOptions.CommandTimeout(60)),
+                ServiceLifetime.Transient);
+            services.AddScoped<IAnnouncementService, AnnouncementService>();
+            var scope = services.BuildServiceProvider().CreateScope();
+            _context = scope.ServiceProvider.GetRequiredService<AppDBContext>();
+            _announcementService = scope.ServiceProvider.GetRequiredService<IAnnouncementService>();
         }
 
         [Benchmark]
@@ -144,7 +154,6 @@ namespace ProjectForBenchmark.Benchmark
         {
             PageResponse<Announcement> pageResponse = new PageResponse<Announcement>(_pageLength, _pageNumber);
             Announcement temp = new Announcement();
-            //pageResponse.TotalItems = _context.Announcements.Count();
             pageResponse.TotalItems = _context.Announcements.FromSqlRaw($"SELECT * FROM {nameof(Announcement)}s" +
                 $" WHERE {nameof(temp.Category)} = {(int)Category.auto}").Count();
             pageResponse.Items = _context.Announcements.FromSqlRaw($"SELECT * FROM {nameof(Announcement)}s" +

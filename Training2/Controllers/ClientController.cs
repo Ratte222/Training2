@@ -58,7 +58,7 @@ namespace Training2.Controllers
             int? pageNumber = null)
         {
             PageResponse<ClientDTO> pageResponse = new PageResponse<ClientDTO>(pageLength, pageNumber);
-            List<Client> clients = _clientService.GetAll_Queryable().ToList();
+            var clients = _clientService.GetAll_Queryable();
             pageResponse.TotalItems = clients.Count();
             pageResponse.Items = _mapper.Map<IEnumerable<Client>, List<ClientDTO>>(
                 clients.Skip(pageResponse.Skip).Take(pageResponse.Take));

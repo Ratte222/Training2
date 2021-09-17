@@ -46,9 +46,9 @@ namespace Training2.Controllers
             int? pageNumber = null)
         {
             PageResponse<ProductPhoto> pageResponse = new PageResponse<ProductPhoto>(pageLength, pageNumber);
-            List<ProductPhoto> productPhotos = _productPhotoService.GetAll_Queryable().ToList();
-            pageResponse.TotalItems = productPhotos.Count();
-            pageResponse.Items = productPhotos.Skip(pageResponse.Skip).Take(pageResponse.Take).ToList();
+            var query = _productPhotoService.GetAll_Queryable();
+            pageResponse.TotalItems = query.Count();
+            pageResponse.Items = query.Skip(pageResponse.Skip).Take(pageResponse.Take).ToList();
             return Ok(pageResponse);
         }
 
