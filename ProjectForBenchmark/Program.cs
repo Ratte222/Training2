@@ -26,10 +26,10 @@ namespace ProjectForBenchmark
             //Test(scope);
 
             //BenchmarkRunner.Run<TestBency>();
-            BenchmarkRunner.Run<AnnouncementBenchy>();
+            //BenchmarkRunner.Run<AnnouncementBenchy>();
             //BenchmarkRunner.Run<EntitySearchBenchy>();
             //BenchmarkRunner.Run<IncludeBanchy>();
-            //BenchmarkRunner.Run<RedisBenchy>();
+            BenchmarkRunner.Run<RedisBenchy>();
             Console.WriteLine("Hello World!");
         }
 
