@@ -23,10 +23,10 @@ namespace ProjectForBenchmark
             Startup startup = new Startup();
             startup.ConfigureService(ref services);
             var scope = services.CreateScope();
-            Test(scope);
+            //Test(scope);
 
             //BenchmarkRunner.Run<TestBency>();
-            //BenchmarkRunner.Run<AnnouncementBenchy>();
+            BenchmarkRunner.Run<AnnouncementBenchy>();
             //BenchmarkRunner.Run<EntitySearchBenchy>();
             //BenchmarkRunner.Run<IncludeBanchy>();
             //BenchmarkRunner.Run<RedisBenchy>();

@@ -22,7 +22,7 @@ namespace ProjectForBenchmark.Benchmark
         private AppDBContext _context;
         private IClientService _clientService;
         private readonly int _pageLength = 15;
-        private readonly int _pageNumber = 5;
+        private readonly int _pageNumber = 50;
         private readonly string _clientId = "47597606-fab3-49e1-a228-02b3679c3c74", _userName = "zFbtrKn1WGJNOQ5XsViQRqsVO",
             _email= " 8rXdDDyNin1t3jd8wEXmnEds6@gmail.com";
 

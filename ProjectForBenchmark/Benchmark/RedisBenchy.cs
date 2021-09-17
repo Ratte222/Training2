@@ -68,6 +68,21 @@ namespace ProjectForBenchmark.Benchmark
         }
 
         [Benchmark]
+        public PageResponse<AnnouncementDTO> GetMostPopularAnnouncementFromRedis_UseMapper()
+        {
+            string recordKey = $"PopularAnnouncementData";
+            PageResponse<AnnouncementDTO> pageResponse = new PageResponse<AnnouncementDTO>(_pageLength, _pageNumber);
+            List<Announcement> announcements = _cache.GetRecordAsync<List<Announcement>>(recordKey).GetAwaiter().GetResult();
+            if (announcements is null)
+            {
+                return null;
+            }
+            pageResponse.TotalItems = _announcementsInRedisCache;
+            pageResponse.Items = _mapper.Map<List<Announcement>, List<AnnouncementDTO>>(announcements);
+            return pageResponse;
+        }
+
+        [Benchmark]
         public PageResponse<Announcement> GetMostPopularAnnouncementFromDatabase()
         {
             PageResponse<Announcement> pageResponse = new PageResponse<Announcement>(_pageLength, _pageNumber);
