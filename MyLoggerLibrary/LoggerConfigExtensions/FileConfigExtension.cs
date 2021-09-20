@@ -1,4 +1,5 @@
 ﻿using MyLoggerLibrary.Configs;
+using MyLoggerLibrary.Services;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -29,7 +30,7 @@ namespace MyLoggerLibrary.LoggerConfigExtensions
         //     _NNN
         //     , with the first filename given no number.</param>
         /// <returns></returns>
-        public static LoggerSinkConfiguration File(this LoggerSinkConfiguration sinkConfiguration,
+        public static LoggerConfiguration File(this LoggerSinkConfiguration sinkConfiguration,
             string path, RollingInterval rollingInterval = RollingInterval.Infinite, TimeSpan? flushToDiskInterval = null,
             long fileSizeLimitBytes = 1073741824, Encoding encoding = null, bool rollOnFileSizeLimit = true)
         {
@@ -47,8 +48,8 @@ namespace MyLoggerLibrary.LoggerConfigExtensions
             else
             { fileConfig.Encoding = encoding; }
             fileConfig.RollOnFileSizeLimit = rollOnFileSizeLimit;
-            sinkConfiguration.FileConfigs.Add(fileConfig);
-            return sinkConfiguration;
+            
+            return sinkConfiguration.AddFileConfig(fileConfig);
         }
     }
 }

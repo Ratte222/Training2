@@ -9,12 +9,12 @@ namespace MyLoggerLibrary.LoggerConfigExtensions
 {
     public static class ConsoleConfigExtension
     {
-        public static LoggerSinkConfiguration Console(this LoggerSinkConfiguration sinkConfiguration/*, IFormatProvider formatProvider*/)
+        public static LoggerConfiguration Console(this LoggerSinkConfiguration sinkConfiguration/*, IFormatProvider formatProvider*/)
         {
             //formatProvider.GetFormat(typeof(CultureInfo));
             //sinkConfiguration.consoleFormatProvider = CultureInfo.CurrentCulture;
-            sinkConfiguration.WritesTo.Add(WriteTo.Console);
-            return sinkConfiguration;
+            //sinkConfiguration.WritesTo.Add(WriteTo.Console);
+            return sinkConfiguration.AddConsoleConfig();
         }
     }
 }

@@ -14,5 +14,12 @@ namespace MyLoggerLibrary.Events
         public LogLevel LogLevel { get; }
         public Exception Exception { get; }
         public string Message { get; }
+
+        public override string ToString()
+        {
+            //return base.ToString();
+            return $"{Timestamp} LogLevel: {LogLevel}, {Message}, " +
+                $"{(Exception is null ? null : Exception.ToString()) }";
+        }
     }
 }

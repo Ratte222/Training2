@@ -31,7 +31,7 @@ using Training2.BackgroundService;
 using Training2.Middleware;
 using MyLoggerLibrary;
 using MyLoggerLibrary.Services;
-using MyLoggerLibrary.Configs;
+using MyLoggerLibrary.LoggerConfigExtensions;
 
 namespace Training2
 {
@@ -211,7 +211,14 @@ namespace Training2
             });
             #endregion
 
-            var myLoggerConfig = new LoggerConfiguration();
+            var myLoggerConfig = new LoggerConfiguration()
+                .WriteTo.Console();
+            //.WriteTo.File(Path.Combine(Assembly.GetExecutingAssembly().Location, @"logs", "mylog"),
+            //    RollingInterval.Day);
+            MyLoggerLibrary.Interfaces.ILogger logger = myLoggerConfig.CreateLoggger();
+            logger.LogInfo("My first log");
+            
+            //myLoggerConfig.
             //services.AddHostedService<UpdateRedisService>(provider =>
             //{
             //    return new UpdateRedisService(provider.GetService<IAnnouncementService>(),
