@@ -29,6 +29,9 @@ using System.Threading.Tasks;
 using Training2.AutoMapper;
 using Training2.BackgroundService;
 using Training2.Middleware;
+using MyLoggerLibrary;
+using MyLoggerLibrary.Services;
+using MyLoggerLibrary.Configs;
 
 namespace Training2
 {
@@ -208,6 +211,7 @@ namespace Training2
             });
             #endregion
 
+            var myLoggerConfig = new LoggerConfiguration();
             //services.AddHostedService<UpdateRedisService>(provider =>
             //{
             //    return new UpdateRedisService(provider.GetService<IAnnouncementService>(),
