@@ -21,13 +21,27 @@ namespace AuxiliaryLib.WorkWithJson
             }
         }
 
-        public void SerializeToFile(T jsonData, string path)
+        public void Serialize(T jsonData, string path)
         {
             JsonSerializer serializer = new JsonSerializer();
             serializer.Converters.Add(new JavaScriptDateTimeConverter());
             serializer.NullValueHandling = NullValueHandling.Ignore;
             using (StreamWriter sw = new StreamWriter(path))
             using (JsonTextWriter writer = new JsonTextWriter(sw))
+            {
+                writer.Formatting = Formatting.Indented;
+                writer.Indentation = 4;
+                writer.IndentChar = ' ';
+                serializer.Serialize(writer, jsonData);
+            }
+        }
+
+        public void Serialize(StreamWriter streamWriter, T jsonData)
+        {
+            JsonSerializer serializer = new JsonSerializer();
+            serializer.Converters.Add(new JavaScriptDateTimeConverter());
+            serializer.NullValueHandling = NullValueHandling.Ignore;
+            using (JsonTextWriter writer = new JsonTextWriter(streamWriter))
             {
                 writer.Formatting = Formatting.Indented;
                 writer.Indentation = 4;

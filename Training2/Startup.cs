@@ -32,6 +32,7 @@ using Training2.Middleware;
 using MyLoggerLibrary;
 using MyLoggerLibrary.Services;
 using MyLoggerLibrary.LoggerConfigExtensions;
+using MyLoggerLibrary.Formatting;
 
 namespace Training2
 {
@@ -212,9 +213,13 @@ namespace Training2
             #endregion
 
             var myLoggerConfig = new LoggerConfiguration()
-                .WriteTo.Console();
-            //.WriteTo.File(Path.Combine(Assembly.GetExecutingAssembly().Location, @"logs", "mylog"),
-            //    RollingInterval.Day);
+                .WriteTo.Console()
+            .WriteTo.File(Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location),
+                @"logs", "mylog.json"), new JsonFormatter(), RollingInterval.Day)
+            .WriteTo.File(Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location),
+                @"logs", "mylog.bin"), new BinaryFormatter(), RollingInterval.Day)
+            .WriteTo.File(Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location),
+                    @"logs", "mylog.xml"), new XmlFormatter(), RollingInterval.Day);
             MyLoggerLibrary.Interfaces.ILogger logger = myLoggerConfig.CreateLoggger();
             logger.LogInfo("My first log");
             

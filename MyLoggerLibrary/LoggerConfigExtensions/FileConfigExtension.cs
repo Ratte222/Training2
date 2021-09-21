@@ -1,4 +1,5 @@
 ﻿using MyLoggerLibrary.Configs;
+using MyLoggerLibrary.Interfaces;
 using MyLoggerLibrary.Services;
 using System;
 using System.Collections.Generic;
@@ -17,7 +18,8 @@ namespace MyLoggerLibrary.LoggerConfigExtensions
         /// <param name="rollingInterval">The interval at which logging will roll over to a new file.</param>
         /// <param name="flushToDiskInterval">If provided, a full disk flush will be performed periodically at the specified
         //     interval.</param>
-        /// <param name="fileSizeLimitBytes">The approximate maximum size, in bytes, to which a log file will be allowed to
+        /// <param name="fileSizeLimitBytes"> Do not work!
+        /// The approximate maximum size, in bytes, to which a log file will be allowed to
         //     grow. For unrestricted growth, pass null. The default is 1 GB. To avoid writing
         //     partial events, the last event within the limit will be written in full even
         //     if it exceeds the limit.</param>
@@ -31,7 +33,7 @@ namespace MyLoggerLibrary.LoggerConfigExtensions
         //     , with the first filename given no number.</param>
         /// <returns></returns>
         public static LoggerConfiguration File(this LoggerSinkConfiguration sinkConfiguration,
-            string path, RollingInterval rollingInterval = RollingInterval.Infinite, TimeSpan? flushToDiskInterval = null,
+            string path, IFormatter formatter, RollingInterval rollingInterval = RollingInterval.Infinite, TimeSpan? flushToDiskInterval = null,
             long fileSizeLimitBytes = 1073741824, Encoding encoding = null, bool rollOnFileSizeLimit = true)
         {
             FileConfig fileConfig = new FileConfig();
@@ -40,15 +42,15 @@ namespace MyLoggerLibrary.LoggerConfigExtensions
             fileConfig.RollingInterval = rollingInterval;
             if (flushToDiskInterval.HasValue)
             { fileConfig.FlushToDiskInterval = flushToDiskInterval; }
-            else
-            { fileConfig.FlushToDiskInterval = TimeSpan.FromMinutes(1); }
+            //else
+            //{ fileConfig.FlushToDiskInterval = TimeSpan.FromMinutes(1); }
             fileConfig.FileSizeLimitBytes = fileSizeLimitBytes;
             if (encoding is null)
             { fileConfig.Encoding = Encoding.UTF8; }
             else
             { fileConfig.Encoding = encoding; }
             fileConfig.RollOnFileSizeLimit = rollOnFileSizeLimit;
-            
+            fileConfig.Formatter = formatter;
             return sinkConfiguration.AddFileConfig(fileConfig);
         }
     }

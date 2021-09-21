@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Text;
+using MyLoggerLibrary.Formatting;
+using MyLoggerLibrary.Interfaces;
 
 namespace MyLoggerLibrary.Configs
 {
@@ -13,6 +15,7 @@ namespace MyLoggerLibrary.Configs
         internal string Path { get; set; }
         internal RollingInterval RollingInterval { get; set; }
         internal bool RollOnFileSizeLimit { get; set; }
-        public TextWriter TextWriter { get; set; }
+        //public TextWriter TextWriter { get; set; }
+        public IFormatter Formatter{get;set;}
     }
 }

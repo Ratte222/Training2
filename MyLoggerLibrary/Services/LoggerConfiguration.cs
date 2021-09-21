@@ -25,6 +25,10 @@ namespace MyLoggerLibrary.Services
             {
                 actions.Add(new LogInConsole.LogInConsole(WriteTo.ConsoleConfigs[0]));
             }
+            foreach(var fileConf in WriteTo.FileConfigs)
+            {
+                actions.Add(new LogInFile.LogInFile(fileConf));
+            }
             return new Logger(actions);
         }
     }

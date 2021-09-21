@@ -5,7 +5,13 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Folder Include="LogInFile\" />
+    <Compile Remove="Forrmatter\**" />
+    <EmbeddedResource Remove="Forrmatter\**" />
+    <None Remove="Forrmatter\**" />
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\AuxiliaryLib\AuxiliaryLib.csproj" />
+  </ItemGroup>
+
 
 </Project>
