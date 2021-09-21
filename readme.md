@@ -14,3 +14,9 @@
 5. Listen streaming audio
     - implemented in "AudioStreamController"
     - test html be in the "TestHTML" folder
+6. Added logger library
+    - Can write a log in format json, xml, binary to a file 
+    - Can write a log in console
+    - A semblance of a factory pattern is used 
+    - A factory pattern well described https://www.codeproject.com/Articles/1131770/Factory-Patterns-Simple-Factory-Pattern
+7. The solution contains a project for testing database queries
