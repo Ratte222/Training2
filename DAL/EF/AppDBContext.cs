@@ -13,6 +13,8 @@ namespace DAL.EF
         public DbSet<Client> Clients { get; set; }
         public DbSet<Announcement> Announcements { get; set; }
         public DbSet<ProductPhoto> ProductPhotos { get; set; }
+        public DbSet<Log> Logs { get; set; }
+
         public AppDBContext(DbContextOptions<AppDBContext> options)
             : base(options)
         {
@@ -55,6 +57,10 @@ namespace DAL.EF
                     .WithMany(j => j.ProductPhotos)
                     .HasForeignKey(i => i.AnnouncementId);
                 });
+            modelBuilder.Entity<Log>(m =>
+            {
+                m.HasKey(i => i.Id);
+            });
         }
     }
 }

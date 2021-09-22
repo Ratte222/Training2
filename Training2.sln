@@ -13,7 +13,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BLL", "BLL\BLL.csproj", "{7
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ProjectForBenchmark", "ProjectForBenchmark\ProjectForBenchmark.csproj", "{4CDD9B15-500B-4C77-B90C-D2139696D74D}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MyLoggerLibrary", "MyLoggerLibrary\MyLoggerLibrary.csproj", "{8E62E3BB-1D34-4353-9370-5B9440EC36C1}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MyLoggerLibrary", "MyLoggerLibrary\MyLoggerLibrary.csproj", "{8E62E3BB-1D34-4353-9370-5B9440EC36C1}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MyLoggerLibraryUI", "MyLoggerLibraryUI\MyLoggerLibraryUI.csproj", "{77383CFE-F137-4337-95E9-2A4D2ED01A43}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -45,6 +47,10 @@ Global
 		{8E62E3BB-1D34-4353-9370-5B9440EC36C1}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{8E62E3BB-1D34-4353-9370-5B9440EC36C1}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{8E62E3BB-1D34-4353-9370-5B9440EC36C1}.Release|Any CPU.Build.0 = Release|Any CPU
+		{77383CFE-F137-4337-95E9-2A4D2ED01A43}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{77383CFE-F137-4337-95E9-2A4D2ED01A43}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{77383CFE-F137-4337-95E9-2A4D2ED01A43}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{77383CFE-F137-4337-95E9-2A4D2ED01A43}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

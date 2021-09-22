@@ -9,6 +9,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Training2.Model;
 
 namespace Training2.AutoMapper
 {
@@ -24,6 +25,9 @@ namespace Training2.AutoMapper
             CreateMap<NewAnnouncementDTO, Announcement>();
             CreateMap<Announcement, AnnouncementDTO>();
             CreateMap<ProductPhoto, ProductPhotoDTO>();
+            CreateMap<Log, MyLoggerUiModel>()
+                .ForMember(dest => dest.LogLevel, opt => opt.MapFrom(scr => scr.Level))
+                .ForMember(dest => dest.TimeStamp, opt => opt.MapFrom(scr => scr.TimeStamp.ToString()));
         }
     }
 }

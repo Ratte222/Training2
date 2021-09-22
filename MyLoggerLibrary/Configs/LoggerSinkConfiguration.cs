@@ -35,10 +35,10 @@ namespace MyLoggerLibrary.Configs
             return _loggerConfiguration;
         }
 
-        internal LoggerConfiguration AddConsoleConfig()
+        internal LoggerConfiguration AddConsoleConfig(ConsoleConfig consoleConfig)
         {
-            WritesTo.Add(WriteTo.Console);
-            ConsoleConfigs.Add(new ConsoleConfig());
+            //WritesTo.Add(WriteTo.Console);
+            ConsoleConfigs.Add(consoleConfig);
             return _loggerConfiguration;
         }
     }

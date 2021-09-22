@@ -26,7 +26,7 @@ namespace MyLoggerLibrary.LoggerConfigExtensions
             {
                 consoleConfig.Formatter = formatter;
             }
-            return sinkConfiguration.AddConsoleConfig();
+            return sinkConfiguration.AddConsoleConfig(consoleConfig);
         }
     }
 }

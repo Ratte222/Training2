@@ -53,6 +53,7 @@ namespace Training2
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllers();
+            services.AddRazorPages();
 
             string connection = Configuration.GetConnectionString("DefaultConnection");
             services.AddDbContext<DAL.EF.AppDBContext>(options => options.UseSqlServer(connection), ServiceLifetime.Transient);
@@ -262,6 +263,7 @@ namespace Training2
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
+                endpoints.MapRazorPages();
             });
         }
     }
