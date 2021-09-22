@@ -6,7 +6,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Text;
 
-namespace MyLoggerLibrary.LogInConsole
+namespace MyLoggerLibrary.Services
 {
     internal class LogInConsole:ILog
     {
@@ -19,7 +19,10 @@ namespace MyLoggerLibrary.LogInConsole
 
         public void Log(LogEvent logEvent)
         {
-            _consoleConfig.Formatter.Serialize(Console.Out, logEvent);
+            try
+            { _consoleConfig.Formatter.Serialize(Console.Out, logEvent); }
+            catch()
+            { }
             //_consoleConfig.TextWriter.WriteLine(logEvent.ToString());
         }
 

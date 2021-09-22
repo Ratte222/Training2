@@ -34,6 +34,7 @@
     <ProjectReference Include="..\BLL\BLL.csproj" />
     <ProjectReference Include="..\DAL\DAL.csproj" />
     <ProjectReference Include="..\MyLoggerLibrary\MyLoggerLibrary.csproj" />
+    <ProjectReference Include="..\MyLoggerLibraryMsSQL\MyLoggerLibraryMsSQL.csproj" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="template\" />

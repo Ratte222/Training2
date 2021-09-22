@@ -51,7 +51,7 @@ namespace MyLoggerLibrary.LoggerConfigExtensions
             { fileConfig.Encoding = encoding; }
             fileConfig.RollOnFileSizeLimit = rollOnFileSizeLimit;
             fileConfig.Formatter = formatter;
-            return sinkConfiguration.AddFileConfig(fileConfig);
+            return sinkConfiguration.AddAction(new LogInFile(fileConfig));
         }
     }
 }

@@ -5,7 +5,7 @@ using System;
 using System.IO;
 using System.Threading;
 
-namespace MyLoggerLibrary.LogInFile
+namespace MyLoggerLibrary.Services
 {
     class LogInFile:ILog, IDisposable
     {
@@ -52,9 +52,16 @@ namespace MyLoggerLibrary.LogInFile
 
         public void Log(LogEvent logEvent)
         {
-            PrepareToSave();
-            _fileConfig.Formatter.Serialize(_streamWriter, logEvent);
-            AfterSave();
+            try
+            {
+                PrepareToSave();
+                _fileConfig.Formatter.Serialize(_streamWriter, logEvent);
+                AfterSave();
+            }
+            catch
+            {
+
+            }            
         }
 
         private void AfterSave()

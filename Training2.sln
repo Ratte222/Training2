@@ -17,6 +17,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MyLoggerLibrary", "MyLogger
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MyLoggerLibraryUI", "MyLoggerLibraryUI\MyLoggerLibraryUI.csproj", "{77383CFE-F137-4337-95E9-2A4D2ED01A43}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MyLoggerLibraryMsSQL", "MyLoggerLibraryMsSQL\MyLoggerLibraryMsSQL.csproj", "{2AABCFDD-AA98-4309-AEF6-2236FCAA4A05}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -51,6 +53,10 @@ Global
 		{77383CFE-F137-4337-95E9-2A4D2ED01A43}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{77383CFE-F137-4337-95E9-2A4D2ED01A43}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{77383CFE-F137-4337-95E9-2A4D2ED01A43}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2AABCFDD-AA98-4309-AEF6-2236FCAA4A05}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2AABCFDD-AA98-4309-AEF6-2236FCAA4A05}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2AABCFDD-AA98-4309-AEF6-2236FCAA4A05}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2AABCFDD-AA98-4309-AEF6-2236FCAA4A05}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -21,25 +21,34 @@ namespace MyLoggerLibrary.Configs
         }
 
         #region fileConfiguration
-        internal List<FileConfig> FileConfigs { get; } = new List<FileConfig>();
+        //internal List<FileConfig> FileConfigs { get; } = new List<FileConfig>();
         //internal IFormatProvider fileFormatProvider;
         #endregion
         #region consoleConfiguration
-        internal List<ConsoleConfig> ConsoleConfigs { get; } = new List<ConsoleConfig>();
+        //internal List<ConsoleConfig> ConsoleConfigs { get; } = new List<ConsoleConfig>();
         #endregion
         protected List<WriteTo> WritesTo { get; set; } = new List<WriteTo>();
-        internal LoggerConfiguration AddFileConfig(FileConfig fileConfig)
-        {
-            WritesTo.Add(WriteTo.File);
-            FileConfigs.Add(fileConfig);
-            return _loggerConfiguration;
-        }
 
-        internal LoggerConfiguration AddConsoleConfig(ConsoleConfig consoleConfig)
+        internal List<ILog> actions { get; private set; } = new List<ILog>();
+
+        public LoggerConfiguration AddAction(ILog log)
         {
-            //WritesTo.Add(WriteTo.Console);
-            ConsoleConfigs.Add(consoleConfig);
+            actions.Add(log);
             return _loggerConfiguration;
         }
+        //internal LoggerConfiguration AddFileConfig(FileConfig fileConfig)
+        //{
+        //    WritesTo.Add(WriteTo.File);
+        //    FileConfigs.Add(fileConfig);
+        //    return _loggerConfiguration;
+        //}
+
+        //internal LoggerConfiguration AddConsoleConfig(ConsoleConfig consoleConfig)
+        //{
+        //    //WritesTo.Add(WriteTo.Console);
+        //    ConsoleConfigs.Add(consoleConfig);
+        //    return _loggerConfiguration;
+        //}
+
     }
 }

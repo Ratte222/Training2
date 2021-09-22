@@ -33,7 +33,7 @@ using MyLoggerLibrary;
 using MyLoggerLibrary.Services;
 using MyLoggerLibrary.LoggerConfigExtensions;
 using MyLoggerLibrary.Formatting;
-
+using MyLoggerLibraryMsSQL;
 namespace Training2
 {
     public class Startup
@@ -220,7 +220,8 @@ namespace Training2
             .WriteTo.File(Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location),
                 @"logs", "mylog.bin"), new BinaryFormatter(), RollingInterval.Day)
             .WriteTo.File(Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location),
-                    @"logs", "mylog.xml"), new XmlFormatter(), RollingInterval.Day);
+                    @"logs", "mylog.xml"), new XmlFormatter(), RollingInterval.Day)
+            .WriteTo.MsSQLServer(connection, "Logs");
             MyLoggerLibrary.Interfaces.ILogger logger = myLoggerConfig.CreateLoggger();
             logger.LogInfo("My first log");
             

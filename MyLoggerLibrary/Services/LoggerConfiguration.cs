@@ -20,16 +20,16 @@ namespace MyLoggerLibrary.Services
 
         public ILogger CreateLoggger()
         {
-            List<ILog> actions = new List<ILog>();
-            foreach(var consoleCong in WriteTo.ConsoleConfigs)
-            {
-                actions.Add(new LogInConsole.LogInConsole(consoleCong));
-            }
-            foreach(var fileConf in WriteTo.FileConfigs)
-            {
-                actions.Add(new LogInFile.LogInFile(fileConf));
-            }
-            return new Logger(actions);
+            //List<ILog> actions = new List<ILog>();
+            //foreach(var consoleCong in WriteTo.ConsoleConfigs)
+            //{
+            //    actions.Add(new LogInConsole.LogInConsole(consoleCong));
+            //}
+            //foreach(var fileConf in WriteTo.FileConfigs)
+            //{
+            //    actions.Add(new LogInFile.LogInFile(fileConf));
+            //}
+            return new Logger(WriteTo.actions);
         }
     }
 }
