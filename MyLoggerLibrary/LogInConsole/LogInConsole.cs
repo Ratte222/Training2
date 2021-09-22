@@ -3,6 +3,7 @@ using MyLoggerLibrary.Events;
 using MyLoggerLibrary.Interfaces;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Text;
 
 namespace MyLoggerLibrary.LogInConsole
@@ -18,7 +19,8 @@ namespace MyLoggerLibrary.LogInConsole
 
         public void Log(LogEvent logEvent)
         {
-            _consoleConfig.TextWriter.WriteLine(logEvent.ToString());
+            _consoleConfig.Formatter.Serialize(Console.Out, logEvent);
+            //_consoleConfig.TextWriter.WriteLine(logEvent.ToString());
         }
 
     }

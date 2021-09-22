@@ -16,5 +16,18 @@ namespace MyLoggerLibrary.Formatting
             formatter.Serialize(streamWriter.BaseStream, logEvent);
             
         }
+
+        public void Serialize(TextWriter textWriter, LogEvent logEvent)
+        {
+            using(var stream = new MemoryStream())
+            {
+                bin.BinaryFormatter formatter = new bin.BinaryFormatter();
+                formatter.Serialize(stream, logEvent);
+                using (var reader = new StreamReader(stream))
+                {
+                    textWriter.WriteLine(reader.ReadToEnd());
+                }
+            }
+        }
     }
 }

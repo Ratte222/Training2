@@ -4,22 +4,19 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Text;
-using System.Xml.Serialization;
 
 namespace MyLoggerLibrary.Formatting
 {
-    public class XmlFormatter : IFormatter
+    public class ConsoleFormatter : IFormatter
     {
         public void Serialize(StreamWriter streamWriter, LogEvent logEvent)
         {
-            var serializer = new XmlSerializer(typeof(LogEvent));
-                serializer.Serialize(streamWriter, logEvent);            
+            streamWriter.WriteLine(logEvent.ToString());
         }
 
         public void Serialize(TextWriter textWriter, LogEvent logEvent)
         {
-            var serializer = new XmlSerializer(typeof(LogEvent));
-            serializer.Serialize(textWriter, logEvent);
+            textWriter.WriteLine(logEvent.ToString());
         }
     }
 }

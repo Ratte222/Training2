@@ -21,9 +21,9 @@ namespace MyLoggerLibrary.Services
         public ILogger CreateLoggger()
         {
             List<ILog> actions = new List<ILog>();
-            if(WriteTo.ConsoleConfigs.Count > 0)
+            foreach(var consoleCong in WriteTo.ConsoleConfigs)
             {
-                actions.Add(new LogInConsole.LogInConsole(WriteTo.ConsoleConfigs[0]));
+                actions.Add(new LogInConsole.LogInConsole(consoleCong));
             }
             foreach(var fileConf in WriteTo.FileConfigs)
             {
