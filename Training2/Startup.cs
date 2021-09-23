@@ -34,6 +34,10 @@ using MyLoggerLibrary.Services;
 using MyLoggerLibrary.LoggerConfigExtensions;
 using MyLoggerLibrary.Formatting;
 using MyLoggerLibraryMsSQL;
+using MyLoggerLibraryUI.Extensions;
+using MyLoggerLibraryUI;
+using MyLoggerMsSQLServerDataProvider;
+
 namespace Training2
 {
     public class Startup
@@ -53,7 +57,7 @@ namespace Training2
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllers();
-            services.AddRazorPages();
+            //services.AddRazorPages();
 
             string connection = Configuration.GetConnectionString("DefaultConnection");
             services.AddDbContext<DAL.EF.AppDBContext>(options => options.UseSqlServer(connection), ServiceLifetime.Transient);
@@ -213,6 +217,7 @@ namespace Training2
             });
             #endregion
 
+            #region mylogger
             var myLoggerConfig = new LoggerConfiguration()
                 .WriteTo.Console()
             .WriteTo.File(Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location),
@@ -224,7 +229,10 @@ namespace Training2
             .WriteTo.MsSQLServer(connection, "Logs");
             MyLoggerLibrary.Interfaces.ILogger logger = myLoggerConfig.CreateLoggger();
             logger.LogInfo("My first log");
-            
+            #endregion
+            #region MyLoggerUI
+            services.AddMyLoggerUi(options => options.UseSqlServer(connection, "Logs"));
+            #endregion
             //myLoggerConfig.
             //services.AddHostedService<UpdateRedisService>(provider =>
             //{
@@ -258,13 +266,15 @@ namespace Training2
             app.UseHttpsRedirection();
             app.UseMiddleware<ExeptionMeddleware>();
             app.UseRouting();
-
+            #region MyLoggerUI
+            app.UseMyLoggerUI();
+            #endregion
             app.UseAuthentication();
             app.UseAuthorization();
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
-                endpoints.MapRazorPages();
+                //endpoints.MapRazorPages();
             });
         }
     }

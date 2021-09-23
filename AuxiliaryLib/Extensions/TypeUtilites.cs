@@ -15,5 +15,14 @@ namespace AuxiliaryLib.Extensions
                 .Select(x => (T)x.GetRawConstantValue())
                 .ToList();
         }
+
+        public static List<T> GetAllPublicGetProperty<T>(this Type type)
+        {
+            return type
+                .GetFields(BindingFlags.Public | BindingFlags.GetProperty)
+                .Where(fi => fi.IsLiteral && !fi.IsInitOnly && fi.FieldType == typeof(T))
+                .Select(x => (T)x.GetRawConstantValue())
+                .ToList();
+        }
     }
 }

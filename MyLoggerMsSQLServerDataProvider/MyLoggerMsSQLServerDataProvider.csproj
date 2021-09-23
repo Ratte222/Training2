@@ -5,15 +5,13 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <None Remove="Services\LogInMsSQL.cs~RF3d5ccd.TMP" />
-  </ItemGroup>
-
-  <ItemGroup>
+    <PackageReference Include="Dapper" Version="2.0.90" />
     <PackageReference Include="System.Data.SqlClient" Version="4.8.3" />
   </ItemGroup>
-
   <ItemGroup>
     <ProjectReference Include="..\MyLoggerLibrary\MyLoggerLibrary.csproj" />
+    <ProjectReference Include="..\MyLoggerLibraryUI\MyLoggerLibraryUI.csproj" />
+    <ProjectReference Include="..\AuxiliaryLib\AuxiliaryLib.csproj" />
   </ItemGroup>
 
 </Project>

@@ -21,7 +21,7 @@ namespace MyLoggerLibrary.Services
         {
             try
             { _consoleConfig.Formatter.Serialize(Console.Out, logEvent); }
-            catch()
+            catch(Exception ex)
             { }
             //_consoleConfig.TextWriter.WriteLine(logEvent.ToString());
         }
