@@ -11,6 +11,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Training2.BackgroundService;
 using BenchmarkDotNet.Running;
+using NoNameLogger.AspNetCore;
 
 namespace Training2
 {
@@ -19,7 +20,12 @@ namespace Training2
         public static void Main(string[] args)
         {
             var host = CreateHostBuilder(args).Build();
-            //BenchmarkRunner.Run<Benchmark.Benchy>();
+            var logger = host.Services.GetRequiredService<ILogger<Program>>();
+
+            logger.LogDebug(1, "Does this line get hit?");    // Not logged
+            logger.LogInformation(3, "Nothing to see here."); // Logs in ConsoleColor.Green
+            logger.LogWarning(5, "Warning... that was odd."); // Logs in ConsoleColor.DarkMagenta
+            logger.LogError(7, "Oops, there was an error.");  // Logs in ConsoleColor.Red
             host.Run();
         }
 
@@ -32,6 +38,11 @@ namespace Training2
                 .ConfigureServices(services =>
                 {
                     services.AddHostedService<UpdateRedisService>();
+                })
+                .ConfigureLogging(log=>
+                {
+                    log.ClearProviders();
+                    log.AddColorConsoleLogger();//https://docs.microsoft.com/ru-ru/dotnet/core/extensions/custom-logging-provider
                 });
     }
 }

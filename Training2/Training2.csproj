@@ -45,6 +45,9 @@
     <Reference Include="NoNameLogger">
       <HintPath>..\..\..\..\..\ProjectGit\NoNameLogger\NoNameLogger\bin\Debug\netcoreapp3.1\NoNameLogger.dll</HintPath>
     </Reference>
+    <Reference Include="NoNameLogger.AspNetCore">
+      <HintPath>..\..\..\..\..\ProjectGit\NoNameLogger\NoNameLogger.AspNetCore\bin\Debug\netcoreapp3.1\NoNameLogger.AspNetCore.dll</HintPath>
+    </Reference>
     <Reference Include="NoNameLoggerMsSql">
       <HintPath>..\..\..\..\..\ProjectGit\NoNameLogger\NoNameLoggerMsSql\bin\Debug\netcoreapp3.1\NoNameLoggerMsSql.dll</HintPath>
     </Reference>
