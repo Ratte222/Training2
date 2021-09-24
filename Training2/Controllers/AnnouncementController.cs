@@ -14,6 +14,7 @@ using System.Linq;
 using System.Text.Json;
 using System.Threading.Tasks;
 using Training2.Extensions;
+using NoNameLogger.Services;
 
 namespace Training2.Controllers
 {
@@ -25,11 +26,13 @@ namespace Training2.Controllers
         private readonly IAnnouncementService _announcementService;
         private readonly IMapper _mapper;
         private readonly IDistributedCache _cache;
+        private readonly Logger _logger;
 
         public AnnouncementController(AppSettings appSettings, IAnnouncementService announcementService, 
-            IMapper mapper, IDistributedCache cache)
+            IMapper mapper, IDistributedCache cache, Logger logger)
         {
-            (_appSettings, _announcementService, _mapper, _cache)=(appSettings, announcementService, mapper, cache);
+            (_appSettings, _announcementService, _mapper, _cache, _logger)=
+                (appSettings, announcementService, mapper, cache, logger);
         }
 
         [HttpPost("AddAnnouncement")]
@@ -51,6 +54,7 @@ namespace Training2.Controllers
             {
                 announcements = _announcementService.GetAll_Queryable().OrderByDescending(i => i.Views)
                     .Take(pageResponse.Take).ToList();
+                _logger.LogWarning($"Key \"{recordKey}\" in redis is null");
                 //await _cache.SetRecordAsync<List<Announcement>>(recordKey, announcements);
             }
             pageResponse.TotalItems = announcements.Count();

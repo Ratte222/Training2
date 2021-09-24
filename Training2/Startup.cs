@@ -30,6 +30,14 @@ using Training2.AutoMapper;
 using Training2.BackgroundService;
 using Training2.Middleware;
 
+using NoNameLogger;
+using NoNameLoggerUI.Extensions;
+using NoNameLoggerMsSql;
+using NoNameLogger.Services;
+using NoNameLogger.Formatting;
+using NoNameLogger.LoggerConfigExtensions;
+using NoNameLoggerMsSqlServerDataProvider;
+
 namespace Training2
 {
     public class Startup
@@ -208,6 +216,29 @@ namespace Training2
             });
             #endregion
 
+
+            #region NoNameLogger
+            var myLoggerConfig = new LoggerConfiguration()
+                .WriteTo.Console()
+            .WriteTo.File(Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location),
+                @"logs", "mylog.json"), new JsonFormatter(), NoNameLogger.LogLevel.Debug, 
+                NoNameLogger.LogLevel.Critical, RollingInterval.Day)
+            .WriteTo.File(Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location),
+                @"logs", "mylog.bin"), new BinaryFormatter(), NoNameLogger.LogLevel.Info,
+                NoNameLogger.LogLevel.Info, RollingInterval.Hour)
+            .WriteTo.File(Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location),
+                    @"logs", "mylog.xml"), new XmlFormatter(), NoNameLogger.LogLevel.Warning,
+                NoNameLogger.LogLevel.Critical, RollingInterval.Minute)
+            .WriteTo.MsSQLServer(connection, "Logs");
+            NoNameLogger.Interfaces.ILogger logger = myLoggerConfig.CreateLoggger();
+            logger.LogDebug("Config host");
+            logger.LogInfo("Log info");
+            logger.LogWarning("Log warning");
+            logger.LogErrore("Log errore");
+            logger.LogCritical("Log critical");
+            
+            services.AddNoNameLoggerUi(options => options.UseSqlServer(connection, "Logs"));
+            #endregion
             //services.AddHostedService<UpdateRedisService>(provider =>
             //{
             //    return new UpdateRedisService(provider.GetService<IAnnouncementService>(),
@@ -240,7 +271,9 @@ namespace Training2
             app.UseHttpsRedirection();
             app.UseMiddleware<ExeptionMeddleware>();
             app.UseRouting();
-
+            #region NoNameLogger
+            app.UseNoNameLoggerUI();
+            #endregion
             app.UseAuthentication();
             app.UseAuthorization();
             app.UseEndpoints(endpoints =>

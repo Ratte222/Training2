@@ -13,6 +13,7 @@
     <PackageReference Include="AutoMapper" Version="10.1.1" />
     <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="8.1.1" />
     <PackageReference Include="BenchmarkDotNet" Version="0.13.1" />
+    <PackageReference Include="Dapper" Version="2.0.90" />
     <PackageReference Include="Magick.NET-Q16-AnyCPU" Version="8.3.0" />
     <PackageReference Include="Magick.NET.Core" Version="8.3.0" />
     <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="3.1.18" />
@@ -28,6 +29,7 @@
     <PackageReference Include="NetVips.Native.win-x64" Version="8.11.3.1" />
     <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
     <PackageReference Include="Swashbuckle.AspNetCore" Version="6.2.1" />
+    <PackageReference Include="System.Data.SqlClient" Version="4.8.3" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\AuxiliaryLib\AuxiliaryLib.csproj" />
@@ -39,6 +41,21 @@
     <Folder Include="Temp\" />
     <Folder Include="Video\" />
   </ItemGroup>
+  <ItemGroup>
+    <Reference Include="NoNameLogger">
+      <HintPath>..\..\..\..\..\ProjectGit\NoNameLogger\NoNameLogger\bin\Debug\netcoreapp3.1\NoNameLogger.dll</HintPath>
+    </Reference>
+    <Reference Include="NoNameLoggerMsSql">
+      <HintPath>..\..\..\..\..\ProjectGit\NoNameLogger\NoNameLoggerMsSql\bin\Debug\netcoreapp3.1\NoNameLoggerMsSql.dll</HintPath>
+    </Reference>
+    <Reference Include="NoNameLoggerMsSqlServerDataProvider">
+      <HintPath>..\..\..\..\..\ProjectGit\NoNameLogger\NoNameLoggerMsSqlServerDataProvider\bin\Debug\netcoreapp3.1\NoNameLoggerMsSqlServerDataProvider.dll</HintPath>
+    </Reference>
+    <Reference Include="NoNameLoggerUI">
+      <HintPath>..\..\..\..\..\ProjectGit\NoNameLogger\NoNameLoggerUI\bin\Debug\netcoreapp3.1\NoNameLoggerUI.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+  
   <ItemGroup>
     <None Update="logo">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
