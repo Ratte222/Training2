@@ -218,24 +218,24 @@ namespace Training2
 
 
             #region NoNameLogger
-            var myLoggerConfig = new LoggerConfiguration()
-                .WriteTo.Console()
-            .WriteTo.File(Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location),
-                @"logs", "mylog.json"), new JsonFormatter(), NoNameLogger.LogLevel.Debug, 
-                NoNameLogger.LogLevel.Critical, RollingInterval.Day)
-            .WriteTo.File(Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location),
-                @"logs", "mylog.bin"), new BinaryFormatter(), NoNameLogger.LogLevel.Info,
-                NoNameLogger.LogLevel.Info, RollingInterval.Hour)
-            .WriteTo.File(Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location),
-                    @"logs", "mylog.xml"), new XmlFormatter(), NoNameLogger.LogLevel.Warning,
-                NoNameLogger.LogLevel.Critical, RollingInterval.Minute)
-            .WriteTo.MsSQLServer(connection, "Logs");
-            NoNameLogger.Interfaces.ILogger logger = myLoggerConfig.CreateLoggger();
-            logger.LogDebug("Config host");
-            logger.LogInfo("Log info");
-            logger.LogWarning("Log warning");
-            logger.LogErrore("Log errore");
-            logger.LogCritical("Log critical");
+            //var myLoggerConfig = new LoggerConfiguration()
+            //    .WriteTo.Console()
+            //.WriteTo.File(Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location),
+            //    @"logs", "mylog.json"), new JsonFormatter(), NoNameLogger.LogLevel.Debug, 
+            //    NoNameLogger.LogLevel.Critical, RollingInterval.Day)
+            //.WriteTo.File(Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location),
+            //    @"logs", "mylog.bin"), new BinaryFormatter(), NoNameLogger.LogLevel.Info,
+            //    NoNameLogger.LogLevel.Info, RollingInterval.Hour)
+            //.WriteTo.File(Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location),
+            //        @"logs", "mylog.xml"), new XmlFormatter(), NoNameLogger.LogLevel.Warning,
+            //    NoNameLogger.LogLevel.Critical, RollingInterval.Minute)
+            //.WriteTo.MsSQLServer(connection, "Logs");
+            //NoNameLogger.Interfaces.ILogger logger = myLoggerConfig.CreateLoggger();
+            //logger.LogDebug("Config host");
+            //logger.LogInformation("Log info");
+            //logger.LogWarning("Log warning");
+            //logger.LogError("Log errore");
+            //logger.LogCritical("Log critical");
             
             services.AddNoNameLoggerUi(options => options.UseSqlServer(connection, "Logs"));
             #endregion
@@ -251,6 +251,14 @@ namespace Training2
             AppDBContext applicationContext, UserManager<Client> userManager, RoleManager<IdentityRole> roleManager,
             ILogger<Startup> logger)
         {
+
+            #region TestLogger
+            logger.LogDebug("Config host");
+            logger.LogInformation("Log info");
+            logger.LogWarning("Log warning");
+            logger.LogError("Log errore");
+            logger.LogCritical("Log critical");
+            #endregion
             applicationContext.Database.Migrate();
             DbInitializer.Initialize(applicationContext, userManager, roleManager);
 #if FillTable

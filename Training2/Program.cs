@@ -12,6 +12,10 @@ using System.Threading.Tasks;
 using Training2.BackgroundService;
 using BenchmarkDotNet.Running;
 using NoNameLogger.AspNetCore;
+using NoNameLogger.AspNetCore.Config;
+using System.IO;
+using System.Reflection;
+using NoNameLogger.Formatting;
 
 namespace Training2
 {
@@ -42,7 +46,24 @@ namespace Training2
                 .ConfigureLogging(log=>
                 {
                     log.ClearProviders();
-                    log.AddColorConsoleLogger();//https://docs.microsoft.com/ru-ru/dotnet/core/extensions/custom-logging-provider
+                    log.AddColorConsoleLogger(configuration =>
+                    {
+                        configuration.LogLevels.Add(
+                            LogLevel.Warning, ConsoleColor.DarkMagenta);
+                        configuration.LogLevels.Add(
+                            LogLevel.Error, ConsoleColor.Red);
+                    });//https://docs.microsoft.com/ru-ru/dotnet/core/extensions/custom-logging-provider
+                    log.AddNoNameFileLogger(configuration => 
+                    {
+                        configuration.Path = Path.Combine(Path.GetDirectoryName(
+                           Assembly.GetExecutingAssembly().Location), @"logs", "asplog.json");
+                        configuration.Formatter = new JsonFormatter();
+
+                        configuration.LogLevels.Add(
+                            LogLevel.Warning, ConsoleColor.DarkMagenta);
+                        configuration.LogLevels.Add(
+                            LogLevel.Error, ConsoleColor.Red);
+                    });
                 });
     }
 }
