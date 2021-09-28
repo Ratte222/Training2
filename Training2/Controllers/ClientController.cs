@@ -6,6 +6,7 @@ using DAL.Model;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Caching.Distributed;
+using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -21,11 +22,14 @@ namespace Training2.Controllers
         private readonly IMapper _mapper;
         private readonly IClientService _clientService;
         private readonly IDistributedCache _cache;
-        public ClientController(IMapper mapper, IClientService clientService, IDistributedCache cache)
+        private readonly ILogger<ClientController> _logger;
+        public ClientController(IMapper mapper, IClientService clientService, IDistributedCache cache,
+            ILogger<ClientController> logger)
         {
             _mapper = mapper;
             _clientService = clientService;
             _cache = cache;
+            _logger = logger;
         }
 
 
@@ -39,17 +43,21 @@ namespace Training2.Controllers
             }
             string recordKey = $"ClientData_{DateTime.Now.ToString("yyyyMMdd_hhmm")}";
 
-            Client client = await _cache.GetRecordAsync<Client>(recordKey);
-            if(client is null)
-            {
-                client = _clientService.Get(i =>
+            Client client = _clientService.Get(i =>
                 i.Id.ToLower() == clientId.ToLower());
-                await _cache.SetRecordAsync<Client>(recordKey, client);
-            }
+
+            //Client client = await _cache.GetRecordAsync<Client>(recordKey);
+            //if(client is null)
+            //{
+            //    client = _clientService.Get(i =>
+            //    i.Id.ToLower() == clientId.ToLower());
+            //    await _cache.SetRecordAsync<Client>(recordKey, client);
+            //}
             if(client is null)
             {
                 return NotFound();
-            }            
+            }
+            _logger.LogInformation($"Get client with id: {clientId}");
             return Ok(_mapper.Map<Client, ClientDTO>(client));
         }
 

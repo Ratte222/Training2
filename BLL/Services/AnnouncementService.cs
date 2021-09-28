@@ -18,7 +18,7 @@ namespace BLL.Services
 
         public override Announcement Get(Func<Announcement, bool> func)
         {
-            Announcement announcement = _context.Announcements.Include(i => i.ProductPhotos).FirstOrDefault(func);
+            Announcement announcement = _context.Announcements.FirstOrDefault(func);
             announcement.Views++;
             UpdateViews(announcement);
             return announcement;

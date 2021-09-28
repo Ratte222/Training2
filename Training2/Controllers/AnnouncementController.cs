@@ -67,6 +67,7 @@ namespace Training2.Controllers
         [HttpGet("GetAnnouncement")]
         public IActionResult GetAnnouncement(long id)
         {
+            _logger.LogTrace($"Get annoucement with id: {id}");
             Announcement announcement = _announcementService.Get(i => i.Id == id);
             AnnouncementDTO announcementDTO = _mapper.Map<Announcement, AnnouncementDTO>(
                 announcement);
@@ -94,6 +95,7 @@ namespace Training2.Controllers
             pageResponse.TotalItems = await announcements.CountAsync();
             pageResponse.Items = _mapper.Map<List<Announcement>, List<AnnouncementDTO>>(
                 await announcements.Skip(pageResponse.Skip).Take(pageResponse.Take).ToListAsync());
+            _logger.LogWarning($"GetAnnouncements, {pageLength}, {pageNumber}");
             return Ok(pageResponse);
         }
     }
