@@ -17,9 +17,11 @@ using System.IO;
 using System.Reflection;
 using NoNameLogger.Formatting;
 using NoNameLogger.Services;
-using NoNameLogger;
+using NoNameLogger.Enums;
 using NoNameLogger.LoggerConfigExtensions;
 using NoNameLoggerMsSql;
+using NoNameLoggerMySQL;
+using NoNameLogger.Configs.Notification;
 
 namespace Training2
 {
@@ -31,29 +33,37 @@ namespace Training2
             var myLoggerConfig = new LoggerConfiguration()
                 .WriteTo.Console()
                 .WriteTo.File(Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location),
-                    @"logs", "mylog.json"), new JsonFormatter(), rollingInterval: RollingInterval.Day,
-                    fileSizeLimitBytes: 5120, rollOnFileSizeLimit: true)
+                    @"logs", "mylog.json"), new JsonFormatter(), rollingInterval: RollingInterval.Day)
                 .WriteTo.File(Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location),
-                    @"logs", "mylog.bin"), new BinaryFormatter(), NoNameLogger.LogLevel.Info,
-                    NoNameLogger.LogLevel.Info, RollingInterval.Hour)
+                    @"logs", "mylog.bin"), new BinaryFormatter(), rollingInterval: RollingInterval.Hour)
                 .WriteTo.File(Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location),
-                        @"logs", "mylog.xml"), new XmlFormatter(), NoNameLogger.LogLevel.Warning, rollingInterval: RollingInterval.Minute,
-                        fileSizeLimitBytes: 5120, rollOnFileSizeLimit: true, encoding: System.Text.Encoding.Unicode)
-                .WriteTo.MsSQLServer(connection, "Logs");
+                        @"logs", "mylog.xml"), new XmlFormatter(), rollingInterval: RollingInterval.Minute)
+                .WriteTo.MsSQLServer(connection, "Logs")
+                .WriteTo.MySQL("server=localhost;user=artur;password=12345678;database=trainingdb2;", "Logs")
+                .WriteTo.Email(configuration => 
+                {
+                    configuration.EmailFrom = "emailFrom@gmail.com";
+                    configuration.EmailTo = "emailTo@gmail.com";
+                    configuration.Password = "password";
+                    configuration.SmtpHost = "smtp.gmail.com";
+                    configuration.SmtpPort = 587;
+                    configuration.MinLogLevel = NoNameLogger.Enums.LogLevel.Critical;
+                    configuration.MaxLogLevel = NoNameLogger.Enums.LogLevel.Critical;
+                    configuration.Formatter = new JsonFormatter();
+                    return configuration;
+                });
             NoNameLogger.Interfaces.ILogger logger = myLoggerConfig.CreateLoggger();
-            logger.LogDebug("Config host");
-            logger.LogInformation("Log info");
-            logger.LogWarning("Log warning");
-            logger.LogError("Log errore");
-            logger.LogCritical("Log critical");
-            var host = CreateHostBuilder(args, logger).Build();
-            var logger_ = host.Services.GetRequiredService<ILogger<Program>>();
-
-            logger_.LogDebug(1, "Does this line get hit?");    // Not logged
-            logger_.LogInformation(3, "Nothing to see here."); // Logs in ConsoleColor.Green
-            logger_.LogWarning(5, "Warning... that was odd."); // Logs in ConsoleColor.DarkMagenta
-            logger_.LogError(7, "Oops, there was an error.");  // Logs in ConsoleColor.Red
-            host.Run();
+            try
+            {
+                var host = CreateHostBuilder(args, logger).Build();
+                host.Run();
+            }
+            catch(Exception ex)
+            {
+                logger.LogCritical($"{ex?.Message} " +
+                    $"{ex?.StackTrace} {ex?.HResult}");
+            }
+            //logger.Dispose();
         }
 
         public static IHostBuilder CreateHostBuilder(string[] args, NoNameLogger.Interfaces.ILogger logger) =>

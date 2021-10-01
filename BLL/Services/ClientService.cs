@@ -40,7 +40,10 @@ namespace BLL.Services
         {
             //Exception: The key value at position 0 of the call to 'DbSet<Client>.Find' was of type 'Predicate<Client>', which does not match the property type of 'string'
             //return _context.Clients.Find(predicate);
-            return _context.Clients.FirstOrDefault(func);
+
+            var client = _context.Clients.AsNoTracking().FirstOrDefault(func);
+            //_context.Entry(client).State = EntityState.Detached;
+            return client;
         }
 
         public IQueryable<Client> GetAll()

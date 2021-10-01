@@ -163,6 +163,7 @@ namespace Training2
             //services.AddScoped(c =>
             //    c.GetService<IMongoClient>().StartSession());
             #endregion
+            
             services.AddSingleton<AppSettings>(appSettings);
             services.AddSingleton<MongoDBSettings>(mongoSettings);
             services.AddSingleton<GoogleSecret>(googleSettings);
@@ -280,6 +281,7 @@ namespace Training2
             app.UseMiddleware<ExeptionMeddleware>();
             app.UseRouting();
             #region NoNameLogger
+            //Enable middleware to serve log-ui (HTML, JS, CSS, etc.).
             app.UseNoNameLoggerUI();
             #endregion
             app.UseAuthentication();

@@ -25,6 +25,7 @@
     </PackageReference>
     <PackageReference Include="Microsoft.Extensions.Caching.StackExchangeRedis" Version="5.0.1" />
     <PackageReference Include="MongoDB.Driver" Version="2.13.1" />
+    <PackageReference Include="MySql.Data" Version="8.0.26" />
     <PackageReference Include="NetVips" Version="2.0.1" />
     <PackageReference Include="NetVips.Native.win-x64" Version="8.11.3.1" />
     <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
@@ -53,6 +54,9 @@
     </Reference>
     <Reference Include="NoNameLoggerMsSqlServerDataProvider">
       <HintPath>..\..\..\..\..\ProjectGit\NoNameLogger\NoNameLoggerMsSqlServerDataProvider\bin\Debug\netcoreapp3.1\NoNameLoggerMsSqlServerDataProvider.dll</HintPath>
+    </Reference>
+    <Reference Include="NoNameLoggerMySQL">
+      <HintPath>..\..\..\..\..\ProjectGit\NoNameLogger\NoNameLoggerMySQL\bin\Debug\netcoreapp3.1\NoNameLoggerMySQL.dll</HintPath>
     </Reference>
     <Reference Include="NoNameLoggerUI">
       <HintPath>..\..\..\..\..\ProjectGit\NoNameLogger\NoNameLoggerUI\bin\Debug\netcoreapp3.1\NoNameLoggerUI.dll</HintPath>

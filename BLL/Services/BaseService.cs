@@ -41,7 +41,7 @@ namespace BLL.Services
 
         public virtual async Task<T> GetAsync(Expression<Func<T, bool>> func)
         {
-            return await _context.Set<T>().FirstOrDefaultAsync(func);
+            return await _context.Set<T>().AsNoTracking().FirstOrDefaultAsync(func);
         }
 
         public virtual void Create(T model)
