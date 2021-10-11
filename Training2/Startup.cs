@@ -29,6 +29,8 @@ using System.Threading.Tasks;
 using Training2.AutoMapper;
 using Training2.BackgroundService;
 using Training2.Middleware;
+using NoNameLoggerUI.Extensions;
+using NoNameLoggerMySqlDataProvider;
 
 namespace Training2
 {
@@ -208,6 +210,9 @@ namespace Training2
             });
             #endregion
 
+            services.AddNoNameLoggerUi(options => options.UseMySql(
+                "server=localhost;user=artur;password=12345678;database=trainingdb2;", "Logs"));
+
             //services.AddHostedService<UpdateRedisService>(provider =>
             //{
             //    return new UpdateRedisService(provider.GetService<IAnnouncementService>(),
@@ -240,7 +245,7 @@ namespace Training2
             app.UseHttpsRedirection();
             app.UseMiddleware<ExeptionMeddleware>();
             app.UseRouting();
-
+            app.UseNoNameLoggerUI();
             app.UseAuthentication();
             app.UseAuthorization();
             app.UseEndpoints(endpoints =>
